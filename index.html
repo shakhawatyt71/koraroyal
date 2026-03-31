@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kora Royal — Redefine Your Style. Premium fashion delivered to your door." />
+  <meta property="og:title" content="Kora Royal — Redefine Your Style" />
+  <meta property="og:description" content="Premium fashion. Fast delivery. 7-day return." />
+  <title>Kora Royal — Redefine Your Style</title>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-572LCW6F');</script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+  /* ══════════════════════════════════════
+     BANGLA CUSTOM FONTS
+  ══════════════════════════════════════ */
+  @font-face {
+    font-family: 'Kafela';
+    src: url('https://raw.githubusercontent.com/shakhawatyt71/koraroyal/main/fonts/FL%20Kafela%20Regular(1).ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'AdorNoirrit';
+    src: url('https://raw.githubusercontent.com/shakhawatyt71/koraroyal/main/fonts/Li%20Ador%20Noirrit%20Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Shadhinata';
+    src: url('https://raw.githubusercontent.com/shakhawatyt71/koraroyal/main/fonts/Li%20Shadhinata%202.0%20Unicode.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Bengali font assignments */
+  [data-lang="bn"] h1,
+  [data-lang="bn"] h2,
+  [data-lang="bn"] .kr-hero__title,
+  [data-lang="bn"] .kr-section__title,
+  [data-lang="bn"] .kr-navbar__logo-name {
+    font-family: 'Shadhinata', 'Hind Siliguri', sans-serif !important;
+  }
+  [data-lang="bn"] .kr-section__eyebrow,
+  [data-lang="bn"] .kr-badge,
+  [data-lang="bn"] .kr-btn,
+  [data-lang="bn"] .kr-navbar__logo-tag,
+  [data-lang="bn"] .kr-trust-card__title,
+  [data-lang="bn"] .kr-review-card__name,
+  [data-lang="bn"] .kr-co-product__name {
+    font-family: 'Kafela', 'Hind Siliguri', sans-serif !important;
+  }
+  [data-lang="bn"] p,
+  [data-lang="bn"] span,
+  [data-lang="bn"] li,
+  [data-lang="bn"] label,
+  [data-lang="bn"] input,
+  [data-lang="bn"] textarea,
+  [data-lang="bn"] select,
+  [data-lang="bn"] .kr-trust-card__desc,
+  [data-lang="bn"] .kr-review-card__text,
+  [data-lang="bn"] .kr-faq-item__a p,
+  [data-lang="bn"] .kr-policy-block__body p,
+  [data-lang="bn"] .kr-policy-list li {
+    font-family: 'AdorNoirrit', 'Hind Siliguri', sans-serif !important;
+  }
+
+  /* ══════════════════════════════════════
+     CAROUSEL
+  ══════════════════════════════════════ */
+  .kr-carousel-section {
+    background: var(--bg-section);
+    padding: 3rem 0 2rem;
+    overflow: hidden;
+  }
+  .kr-carousel-wrap {
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .kr-carousel-wrap:active { cursor: grabbing; }
+  .kr-carousel-track {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    animation: carouselScroll 14s linear infinite;
+    padding: 0.5rem 0 1rem;
+  }
+  .kr-carousel-track:hover { animation-play-state: paused; }
+  @keyframes carouselScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .kr-carousel-wrap::before,
+  .kr-carousel-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .kr-carousel-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-section), transparent);
+  }
+  .kr-carousel-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-section), transparent);
+  }
+
+  .kr-carousel-card {
+    width: 210px;
+    flex-shrink: 0;
+    background: var(--bg-card);
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1.5px solid var(--border-subtle);
+    transition:
+      transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
+      box-shadow 0.3s ease;
+    position: relative;
+  }
+  .kr-carousel-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 48px rgba(18,19,19,0.14);
+  }
+  .kr-carousel-card__img-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .kr-carousel-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    pointer-events: none;
+  }
+  .kr-carousel-card:hover .kr-carousel-card__img {
+    transform: scale(1.07);
+  }
+  .kr-carousel-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+  }
+  .kr-carousel-card__stats {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    z-index: 1;
+  }
+  .kr-cstat {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(18,19,19,0.78);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 99px;
+    backdrop-filter: blur(8px);
+    line-height: 1;
+  }
+  .kr-carousel-card__body {
+    padding: 0.75rem;
+  }
+  .kr-carousel-card__name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    margin-bottom: 0.375rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .kr-carousel-card__price {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-bottom: 0.625rem;
+    flex-wrap: wrap;
+  }
+  .kr-carousel-card__price .cur {
+    font-weight: 800;
+    color: var(--brand-coral);
+    font-size: 1rem;
+    font-family: var(--font-heading);
+  }
+  .kr-carousel-card__price .ori {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+  .kr-carousel-card__price .off {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(255,96,68,0.12);
+    color: var(--brand-coral);
+    padding: 2px 6px;
+    border-radius: 99px;
+  }
+  .kr-carousel-card__btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 0.625rem;
+    background: var(--brand-coral);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-family: var(--font-heading);
+    border: none;
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .kr-carousel-card__btn:hover {
+    background: #e5533a;
+    transform: scale(1.04);
+  }
+  .kr-carousel-card__btn.is-selected {
+    background: #22c55e;
+  }
+
+  /* ══════════════════════════════════════
+     CHECKOUT PRODUCTS (multi-product rows)
+  ══════════════════════════════════════ */
+  .kr-checkout-products {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .kr-co-product {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 0.75rem;
+    background: var(--bg-hover);
+    border: 2px solid var(--border-subtle);
+    border-radius: 0.875rem;
+    padding: 0.75rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .kr-co-product.is-active {
+    border-color: var(--brand-coral);
+    background: rgba(255,96,68,0.04);
+  }
+  .kr-co-product__img {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .kr-co-product__right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .kr-co-product__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .kr-co-product__name {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .kr-co-product__price {
+    font-weight: 800;
+    font-size: 0.875rem;
+    color: var(--brand-coral);
+    white-space: nowrap;
+    font-family: var(--font-heading);
+  }
+  .kr-co-product__row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+  .kr-co-size-btn {
+    min-width: 36px;
+    height: 30px;
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 0.4rem;
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.34,1.56,0.64,1);
+    font-family: var(--font-heading);
+    padding: 0 8px;
+    line-height: 1;
+  }
+  .kr-co-size-btn:hover {
+    border-color: var(--brand-coral);
+    transform: translateY(-1px);
+  }
+  .kr-co-size-btn.is-selected {
+    border-color: var(--brand-coral);
+    background: var(--brand-coral);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .kr-co-color-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition:
+      transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+      box-shadow 0.15s;
+    flex-shrink: 0;
+  }
+  .kr-co-color-btn:hover { transform: scale(1.25); }
+  .kr-co-color-btn.is-selected {
+    box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--brand-coral);
+    transform: scale(1.1);
+  }
+  .kr-co-qty {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-left: auto;
+  }
+  .kr-co-qty-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .kr-co-qty-btn:hover {
+    background: var(--brand-coral);
+    color: #fff;
+  }
+  .kr-co-qty-num {
+    min-width: 32px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    background: var(--input-bg);
+    border-left: 1.5px solid var(--border-subtle);
+    border-right: 1.5px solid var(--border-subtle);
+    line-height: 28px;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+  }
+
+  /* ══════════════════════════════════════
+     ORDER LAYOUT v2
+  ══════════════════════════════════════ */
+  .kr-order-layout-v2 {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .kr-summary-box {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+  .kr-summary-box__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kr-summary-box__title svg {
+    color: var(--brand-coral);
+    flex-shrink: 0;
+  }
+  .kr-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kr-summary-row:last-child { border-bottom: none; }
+  .kr-summary-row span:first-child { color: var(--text-muted); }
+  .kr-summary-row span:last-child  { font-weight: 700; color: var(--text-primary); }
+  .kr-summary-row--total {
+    padding: 8px 0;
+    margin-top: 2px;
+  }
+  .kr-summary-row--total span:first-child {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+  }
+  .kr-summary-row--total span:last-child {
+    font-size: 1.25rem !important;
+    font-weight: 900 !important;
+    color: var(--brand-coral) !important;
+    font-family: var(--font-heading);
+  }
+
+  /* ══════════════════════════════════════
+     FORM COMPACT
+  ══════════════════════════════════════ */
+  .kr-form-group-sm { margin-bottom: 0.75rem; }
+  .kr-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  /* ══════════════════════════════════════
+     CONFIRM BUTTON SHAKE
+  ══════════════════════════════════════ */
+  @keyframes btnShakeAttention {
+    0%,100% { transform: translateX(0) scale(1); box-shadow: 0 4px 16px rgba(255,96,68,0.35); }
+    15%,45%  { transform: translateX(-5px) scale(1.01); }
+    30%,60%  { transform: translateX(5px) scale(1.01); }
+    75%      { transform: translateX(-3px); }
+    90%      { transform: translateX(3px); }
+  }
+  .kr-btn--confirm-shake {
+    animation: btnShakeAttention 2.2s ease-in-out infinite;
+  }
+  .kr-btn--confirm-shake:hover,
+  .kr-btn--confirm-shake:focus {
+    animation-play-state: paused;
+  }
+
+  /* ══════════════════════════════════════
+     WHATSAPP ORDER BUTTON
+  ══════════════════════════════════════ */
+  .kr-wa-order-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 13px;
+    border-radius: 0.875rem;
+    background: #25D366;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: var(--font-heading);
+    border: none;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    text-decoration: none;
+    transition:
+      background 0.2s,
+      transform 0.15s cubic-bezier(0.34,1.56,0.64,1),
+      box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+  }
+  .kr-wa-order-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    color: #fff;
+    opacity: 1;
+    box-shadow: 0 8px 24px rgba(37,211,102,0.4);
+  }
+
+  /* ══════════════════════════════════════
+     FIXED BOTTOM ORDER BUTTON
+  ══════════════════════════════════════ */
+  .kr-fixed-order-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 450;
+    padding: 0.875rem 1rem;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -6px 24px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 0.625rem;
+    align-items: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .kr-fixed-order-btn .kr-btn--main {
+    flex: 1;
+    font-size: 1rem;
+    padding: 14px;
+  }
+  .kr-fixed-order-btn .kr-btn--wa-mini {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    background: #25D366;
+    border-radius: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .kr-fixed-order-btn .kr-btn--wa-mini:hover { background: #128C7E; }
+
+  /* Hide old sticky CTA */
+  .kr-sticky-cta { display: none !important; }
+
+  /* ══════════════════════════════════════
+     SIZE CHART OVERLAY
+  ══════════════════════════════════════ */
+  .kr-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 1rem;
+  }
+  .kr-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .kr-overlay__box {
+    background: var(--bg-card);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    max-width: 460px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    transform: scale(0.88) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    border: 1px solid var(--border-subtle);
+  }
+  .kr-overlay.is-active .kr-overlay__box {
+    transform: scale(1) translateY(0);
+  }
+  .kr-overlay__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kr-overlay__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .kr-overlay__close {
+    width: 36px;
+    height: 36px;
+    border-radius: 0.5rem;
+    background: var(--bg-hover);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .kr-overlay__close:hover {
+    background: var(--brand-coral);
+    color: #fff;
+  }
+
+  /* Size table */
+  .kr-size-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.5rem;
+  }
+  .kr-size-table th {
+    background: var(--bg-section);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 0.625rem 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kr-size-table td {
+    padding: 0.625rem 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  .kr-size-table tr:last-child td { border-bottom: none; }
+  .kr-size-table tr:hover td { background: var(--bg-hover); }
+  .kr-size-table td:first-child {
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+  }
+
+  /* ══════════════════════════════════════
+     POLICIES SECTION
+  ══════════════════════════════════════ */
+  .kr-policies {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 720px;
+    margin: 2.5rem auto 0;
+  }
+  .kr-policy-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  .kr-policy-block:hover {
+    box-shadow: 0 8px 32px rgba(18,19,19,0.08);
+  }
+  .kr-policy-block__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .kr-policy-block__header h3 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .kr-policy-block__header svg {
+    flex-shrink: 0;
+  }
+  .kr-policy-block__body {
+    padding: 1rem 1.25rem;
+  }
+  .kr-policy-block__body > p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 0.75rem;
+  }
+  .kr-policy-list {
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    list-style: disc;
+  }
+  .kr-policy-list li {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════ */
+  @media (max-width: 640px) {
+    .kr-carousel-card { width: 170px; }
+    .kr-form-row { grid-template-columns: 1fr; }
+    .kr-order-layout-v2 { gap: 1rem; }
+    .kr-summary-box { padding: 1rem; }
+    .kr-policies { margin-top: 2rem; }
+  }
+  </style>
+</head>
+
+<body style="padding-bottom: 80px">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-572LCW6F"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- ══════════════════════════════════════
+     iOS DYNAMIC ISLAND
+══════════════════════════════════════ -->
+<div id="kr-island" class="kr-island" role="status" aria-live="polite">
+  <div class="kr-island__bubble">
+    <div class="kr-island__icon" id="islandIcon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+           fill="none" stroke="#FF6044" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    </div>
+    <div class="kr-island__content">
+      <p class="kr-island__title" id="islandTitle">Limited Offer</p>
+      <p class="kr-island__body"  id="islandBody">Only 2 days left!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ANNOUNCEMENT BAR
+══════════════════════════════════════ -->
+<div class="kr-announcement" id="kr-announcement" role="banner">
+  <div class="kr-announcement__track">
+    <span class="kr-announcement__item"
+      data-en="Free Delivery on orders ৳2999+ &nbsp;|&nbsp; 7-Day Easy Return &nbsp;|&nbsp; Cash on Delivery Available &nbsp;|&nbsp; Pathao Courier"
+      data-bn="৳২৯৯৯+ অর্ডারে ফ্রি ডেলিভারি &nbsp;|&nbsp; ৭ দিনের সহজ রিটার্ন &nbsp;|&nbsp; ক্যাশ অন ডেলিভারি &nbsp;|&nbsp; পাঠাও কুরিয়ার">
+      Free Delivery on orders ৳2999+ &nbsp;|&nbsp; 7-Day Easy Return &nbsp;|&nbsp; Cash on Delivery Available &nbsp;|&nbsp; Pathao Courier
+    </span>
+    <span class="kr-announcement__item" aria-hidden="true"
+      data-en="Free Delivery on orders ৳2999+ &nbsp;|&nbsp; 7-Day Easy Return &nbsp;|&nbsp; Cash on Delivery Available &nbsp;|&nbsp; Pathao Courier"
+      data-bn="৳২৯৯৯+ অর্ডারে ফ্রি ডেলিভারি &nbsp;|&nbsp; ৭ দিনের সহজ রিটার্ন &nbsp;|&nbsp; ক্যাশ অন ডেলিভারি &nbsp;|&nbsp; পাঠাও কুরিয়ার">
+      Free Delivery on orders ৳2999+ &nbsp;|&nbsp; 7-Day Easy Return &nbsp;|&nbsp; Cash on Delivery Available &nbsp;|&nbsp; Pathao Courier
+    </span>
+  </div>
+  <button class="kr-announcement__close" id="announcementClose" aria-label="Close announcement">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+<nav class="kr-navbar" id="kr-navbar" role="navigation" aria-label="Main navigation">
+  <div class="kr-navbar__inner">
+
+    <!-- Logo -->
+    <a href="index.html" class="kr-navbar__logo" aria-label="Kora Royal Home">
+      <div class="kr-navbar__logo-mark">KR</div>
+      <div class="kr-navbar__logo-text">
+        <span class="kr-navbar__logo-name">Kora Royal</span>
+        <span class="kr-navbar__logo-tag"
+          data-en="Redefine Your Style"
+          data-bn="স্টাইলকে নতুনভাবে সংজ্ঞায়িত করুন">Redefine Your Style</span>
+      </div>
+    </a>
+
+    <!-- Controls -->
+    <div class="kr-navbar__controls">
+      <a href="tel:+8801935158745" class="kr-navbar__control kr-navbar__phone" aria-label="Call us">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 15"/>
+        </svg>
+        <span class="kr-navbar__phone-num">+880 1935-158745</span>
+      </a>
+
+      <button class="kr-navbar__control kr-navbar__lang" id="langToggle" aria-label="Toggle language">
+        <span id="langLabel">বাং</span>
+      </button>
+
+      <button class="kr-navbar__control kr-navbar__theme" id="themeToggle" aria-label="Toggle theme">
+        <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <a href="https://wa.me/8801935158745?text=Hello%20Kora%20Royal!%20I%20need%20help%20with%20my%20order."
+         target="_blank" rel="noopener" class="kr-navbar__control kr-navbar__wa" aria-label="WhatsApp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+        </svg>
+      </a>
+
+      <button class="kr-navbar__control kr-navbar__hamburger" id="navHamburger"
+              aria-label="Open menu" aria-expanded="false">
+        <svg id="hamburgerOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg id="hamburgerClose" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             style="display:none">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="kr-mobile-menu" id="kr-mobile-menu" aria-hidden="true">
+    <a href="tel:+8801935158745" class="kr-mobile-menu__item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 15"/>
+      </svg>
+      <span data-en="Call Us" data-bn="কল করুন">Call Us</span>
+    </a>
+    <a href="https://wa.me/8801935158745?text=Hello%20Kora%20Royal!%20I%20need%20help%20with%20my%20order."
+       target="_blank" rel="noopener" class="kr-mobile-menu__item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+      </svg>
+      <span>WhatsApp</span>
+    </a>
+    <a href="#kr-order-form" class="kr-mobile-menu__item kr-mobile-menu__cta">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span data-en="Order Now" data-bn="এখনই অর্ডার করুন">Order Now</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════ -->
+<section class="kr-hero" id="kr-hero">
+  <div class="kr-hero__bg-orbs">
+    <div class="kr-hero__orb kr-hero__orb--1"></div>
+    <div class="kr-hero__orb kr-hero__orb--2"></div>
+    <div class="kr-hero__orb kr-hero__orb--3"></div>
+  </div>
+  <div class="kr-container kr-hero__inner">
+
+    <!-- Content -->
+    <div class="kr-hero__content">
+      <div class="kr-hero__badge anim-fade-up" style="--delay:.1s">
+        <span class="kr-badge kr-badge--hot" data-en="Best Seller" data-bn="সেরা বিক্রয়">Best Seller</span>
+        <span class="kr-badge kr-badge--new" data-en="New Arrival" data-bn="নতুন আগমন">New Arrival</span>
+      </div>
+
+      <h1 class="kr-hero__title anim-fade-up" style="--delay:.2s">
+        <span class="kr-word" data-en="Premium" data-bn="প্রিমিয়াম">Premium</span>
+        <span class="kr-word kr-word--coral" data-en="Collection" data-bn="কালেকশন">Collection</span>
+        <span class="kr-word">2026</span>
+      </h1>
+
+      <p class="kr-hero__sub anim-fade-up" style="--delay:.35s"
+        data-en="Elevate your wardrobe with Kora Royal's hand-crafted premium fashion. Designed for those who demand excellence."
+        data-bn="কোরা রয়্যালের হাতে তৈরি প্রিমিয়াম ফ্যাশন দিয়ে আপনার পোশাকের সংগ্রহকে উন্নত করুন।">
+        Elevate your wardrobe with Kora Royal's hand-crafted premium fashion. Designed for those who demand excellence.
+      </p>
+
+      <div class="kr-hero__stats anim-fade-up" style="--delay:.45s">
+        <div class="kr-stat">
+          <span class="kr-stat__num" data-count="1247">0</span>
+          <span class="kr-stat__label" data-en="Happy Customers" data-bn="সন্তুষ্ট গ্রাহক">Happy Customers</span>
+        </div>
+        <div class="kr-stat__divider"></div>
+        <div class="kr-stat">
+          <span class="kr-stat__num" data-count="98">0</span><span class="kr-stat__suffix">%</span>
+          <span class="kr-stat__label" data-en="Satisfaction" data-bn="সন্তুষ্টির হার">Satisfaction</span>
+        </div>
+        <div class="kr-stat__divider"></div>
+        <div class="kr-stat">
+          <span class="kr-stat__num" data-count="7">0</span>
+          <span class="kr-stat__label" data-en="Day Return" data-bn="দিনের রিটার্ন">Day Return</span>
+        </div>
+      </div>
+
+      <div class="kr-hero__ctas anim-fade-up" style="--delay:.55s">
+        <a href="#kr-order-form" class="kr-btn kr-btn--primary kr-btn--lg kr-btn--glow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span data-en="Order Now" data-bn="এখনই অর্ডার করুন">Order Now</span>
+        </a>
+        <a href="#kr-products" class="kr-btn kr-btn--secondary kr-btn--lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span data-en="View Products" data-bn="পণ্য দেখুন">View Products</span>
+        </a>
+      </div>
+
+      <div class="kr-hero__trust anim-fade-up" style="--delay:.65s">
+        <span class="kr-trust-chip">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+          <span data-en="100% Original" data-bn="১০০% আসল">100% Original</span>
+        </span>
+        <span class="kr-trust-chip">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+          </svg>
+          <span data-en="7-Day Return" data-bn="৭ দিন রিটার্ন">7-Day Return</span>
+        </span>
+        <span class="kr-trust-chip">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          <span data-en="Fast Delivery" data-bn="দ্রুত ডেলিভারি">Fast Delivery</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Visual -->
+    <div class="kr-hero__visual anim-fade-up" style="--delay:.3s">
+      <div class="kr-hero__img-wrapper" id="heroImgWrapper">
+        <div class="kr-hero__img-glow"></div>
+        <img src="https://i.ibb.co/Q38M5xKj/gemini-3-pro-image-preview-nano-banana-pro-a-MASTER-PROMPT.png"
+             alt="Kora Royal Premium Collection"
+             class="kr-hero__img" id="heroMainImg" loading="eager" />
+        <div class="kr-hero__float kr-hero__float--tl">
+          <div class="kr-float-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                 fill="none" stroke="var(--brand-coral)" stroke-width="2">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <div>
+              <div class="kr-float-card__val">2,707+</div>
+              <div class="kr-float-card__txt" data-en="Total Sold" data-bn="মোট বিক্রয়">Total Sold</div>
+            </div>
+          </div>
+        </div>
+        <div class="kr-hero__float kr-hero__float--br">
+          <div class="kr-float-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                 fill="#f59e0b" stroke="#f59e0b" stroke-width="1">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <div>
+              <div class="kr-float-card__val">4.8/5</div>
+              <div class="kr-float-card__txt" data-en="Avg Rating" data-bn="গড় রেটিং">Avg Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thumbnails -->
+      <div class="kr-hero__thumbs" id="heroThumbs">
+        <button class="kr-hero__thumb kr-hero__thumb--active"
+                data-img="https://i.ibb.co/Q38M5xKj/gemini-3-pro-image-preview-nano-banana-pro-a-MASTER-PROMPT.png"
+                aria-label="Product image 1">
+          <img src="https://i.ibb.co/Q38M5xKj/gemini-3-pro-image-preview-nano-banana-pro-a-MASTER-PROMPT.png" alt="" loading="lazy" />
+        </button>
+        <button class="kr-hero__thumb"
+                data-img="https://i.ibb.co/4xfRxkj/Image-Generation-Arena-Compare-AI-Image-Models-4.png"
+                aria-label="Product image 2">
+          <img src="https://i.ibb.co/4xfRxkj/Image-Generation-Arena-Compare-AI-Image-Models-4.png" alt="" loading="lazy" />
+        </button>
+        <button class="kr-hero__thumb"
+                data-img="https://i.ibb.co/pv9MvYCM/gemini-3-pro-image-preview-nano-banana-pro-a-SUPER-COMBINED.png"
+                aria-label="Product image 3">
+          <img src="https://i.ibb.co/pv9MvYCM/gemini-3-pro-image-preview-nano-banana-pro-a-SUPER-COMBINED.png" alt="" loading="lazy" />
+        </button>
+        <button class="kr-hero__thumb"
+                data-img="https://i.ibb.co/gLmL1qZR/gemini-3-pro-image-preview-nano-banana-pro-a-SUPER-COMBINED-M.png"
+                aria-label="Product image 4">
+          <img src="https://i.ibb.co/gLmL1qZR/gemini-3-pro-image-preview-nano-banana-pro-a-SUPER-COMBINED-M.png" alt="" loading="lazy" />
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="kr-hero__scroll">
+    <div class="kr-scroll-mouse"><div class="kr-scroll-mouse__dot"></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PRODUCT CAROUSEL
+══════════════════════════════════════ -->
+<section class="kr-carousel-section" id="kr-products">
+  <div class="kr-container">
+    <div class="kr-section__header anim-fade-up" style="margin-bottom:1.5rem">
+      <span class="kr-section__eyebrow"
+        data-en="Our Collection" data-bn="আমাদের সংগ্রহ">Our Collection</span>
+      <h2 class="kr-section__title"
+        data-en="Choose Your Style" data-bn="আপনার স্টাইল বেছে নিন">Choose Your Style</h2>
+    </div>
+  </div>
+
+  <div class="kr-carousel-wrap" id="carouselWrap">
+    <div class="kr-carousel-track" id="carouselTrack"></div>
+  </div>
+
+  <div style="text-align:center; margin-top:1.25rem; padding:0 1rem">
+    <a href="#kr-order-form" class="kr-btn kr-btn--primary kr-btn--lg kr-btn--glow">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span data-en="Order Now — Fast Delivery" data-bn="এখনই অর্ডার করুন — দ্রুত ডেলিভারি">Order Now — Fast Delivery</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     ORDER FORM
+══════════════════════════════════════ -->
+<section class="kr-section" id="kr-order-form"
+         style="background:var(--bg-body); padding-top:2.5rem; padding-bottom:3rem">
+  <div class="kr-container">
+
+    <!-- Size chart button -->
+    <div style="text-align:center; margin-bottom:1rem">
+      <button class="kr-size-chart-btn" type="button" style="
+        display:inline-flex; align-items:center; gap:.5rem;
+        padding:10px 20px; border-radius:99px;
+        background:var(--bg-card); border:1.5px solid var(--border-subtle);
+        color:var(--text-secondary); font-size:.875rem; font-weight:600;
+        cursor:pointer; transition:all .2s; font-family:var(--font-body);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="var(--brand-coral)" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span data-en="View Size Chart" data-bn="সাইজ চার্ট দেখুন">View Size Chart</span>
+      </button>
+    </div>
+
+    <div class="kr-section__header anim-fade-up" style="margin-bottom:1.5rem">
+      <span class="kr-section__eyebrow"
+        data-en="Place Your Order" data-bn="অর্ডার দিন">Place Your Order</span>
+      <h2 class="kr-section__title"
+        data-en="Order Now, Pay Later" data-bn="এখনই অর্ডার করুন, পরে পেমেন্ট করুন">Order Now, Pay Later</h2>
+      <p class="kr-section__desc"
+        data-en="Fill in your details below. We'll confirm within minutes!"
+        data-bn="নিচে আপনার তথ্য পূরণ করুন। আমরা কয়েক মিনিটের মধ্যে কনফার্ম করব!">
+        Fill in your details below. We'll confirm within minutes!
+      </p>
+    </div>
+
+    <div class="kr-order-layout-v2">
+      <form id="orderForm" novalidate autocomplete="off">
+
+        <!-- ① Product Selection -->
+        <div class="kr-summary-box">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span data-en="Select Products" data-bn="পণ্য নির্বাচন করুন">Select Products</span>
+          </div>
+          <div class="kr-checkout-products" id="checkoutProducts"></div>
+        </div>
+
+        <!-- ② Customer Info -->
+        <div class="kr-summary-box">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span data-en="Your Information" data-bn="আপনার তথ্য">Your Information</span>
+          </div>
+
+          <div class="kr-form-group-sm">
+            <label class="kr-form-label" for="customerName">
+              <span data-en="Full Name" data-bn="পুরো নাম">Full Name</span>
+              <span class="kr-form-required">*</span>
+            </label>
+            <div class="kr-input-wrap">
+              <svg class="kr-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input type="text" id="customerName" name="name" class="kr-input"
+                placeholder="Your full name"
+                data-placeholder-en="Your full name"
+                data-placeholder-bn="আপনার পুরো নাম"
+                autocomplete="name" aria-required="true" />
+            </div>
+            <span class="kr-form-error" id="nameError"></span>
+          </div>
+
+          <div class="kr-form-row">
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label" for="customerPhone">
+                <span data-en="Phone" data-bn="ফোন">Phone</span>
+                <span class="kr-form-required">*</span>
+              </label>
+              <div class="kr-input-wrap">
+                <svg class="kr-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 15"/>
+                </svg>
+                <input type="tel" id="customerPhone" name="phone" class="kr-input"
+                  placeholder="01XXXXXXXXX"
+                  data-placeholder-en="01XXXXXXXXX"
+                  data-placeholder-bn="০১XXXXXXXXX"
+                  autocomplete="tel" aria-required="true" />
+              </div>
+              <span class="kr-form-error" id="phoneError"></span>
+            </div>
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label" for="customerEmail">
+                <span data-en="Email (Optional)" data-bn="ইমেইল (ঐচ্ছিক)">Email (Optional)</span>
+              </label>
+              <div class="kr-input-wrap">
+                <svg class="kr-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <input type="email" id="customerEmail" name="email" class="kr-input"
+                  placeholder="your@email.com"
+                  data-placeholder-en="your@email.com"
+                  data-placeholder-bn="your@email.com"
+                  autocomplete="email" />
+              </div>
+              <span class="kr-form-error" id="emailError"></span>
+            </div>
+          </div>
+
+          <div class="kr-form-group-sm">
+            <label class="kr-form-label" for="customerDistrict">
+              <span data-en="District" data-bn="জেলা">District</span>
+              <span class="kr-form-required">*</span>
+            </label>
+            <div class="kr-input-wrap">
+              <svg class="kr-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <select id="customerDistrict" name="district" class="kr-input kr-select" aria-required="true">
+                <option value="" data-en="Select your district" data-bn="জেলা নির্বাচন করুন">Select your district</option>
+                <optgroup label="ঢাকা বিভাগ">
+                  <option value="Dhaka" data-delivery="60">Dhaka (ঢাকা)</option>
+                  <option value="Gazipur" data-delivery="130">Gazipur (গাজীপুর)</option>
+                  <option value="Narayanganj" data-delivery="130">Narayanganj (নারায়ণগঞ্জ)</option>
+                  <option value="Manikganj" data-delivery="130">Manikganj (মানিকগঞ্জ)</option>
+                  <option value="Munshiganj" data-delivery="130">Munshiganj (মুন্সীগঞ্জ)</option>
+                  <option value="Narsingdi" data-delivery="130">Narsingdi (নরসিংদী)</option>
+                  <option value="Tangail" data-delivery="130">Tangail (টাঙ্গাইল)</option>
+                  <option value="Kishoreganj" data-delivery="130">Kishoreganj (কিশোরগঞ্জ)</option>
+                  <option value="Faridpur" data-delivery="130">Faridpur (ফরিদপুর)</option>
+                  <option value="Rajbari" data-delivery="130">Rajbari (রাজবাড়ী)</option>
+                  <option value="Gopalganj" data-delivery="130">Gopalganj (গোপালগঞ্জ)</option>
+                  <option value="Madaripur" data-delivery="130">Madaripur (মাদারীপুর)</option>
+                  <option value="Shariatpur" data-delivery="130">Shariatpur (শরীয়তপুর)</option>
+                </optgroup>
+                <optgroup label="চট্টগ্রাম বিভাগ">
+                  <option value="Chittagong" data-delivery="130">Chittagong (চট্টগ্রাম)</option>
+                  <option value="Cox's Bazar" data-delivery="130">Cox's Bazar (কক্সবাজার)</option>
+                  <option value="Rangamati" data-delivery="130">Rangamati (রাঙামাটি)</option>
+                  <option value="Bandarban" data-delivery="130">Bandarban (বান্দরবান)</option>
+                  <option value="Khagrachhari" data-delivery="130">Khagrachhari (খাগড়াছড়ি)</option>
+                  <option value="Feni" data-delivery="130">Feni (ফেনী)</option>
+                  <option value="Comilla" data-delivery="130">Comilla (কুমিল্লা)</option>
+                  <option value="Chandpur" data-delivery="130">Chandpur (চাঁদপুর)</option>
+                  <option value="Lakshmipur" data-delivery="130">Lakshmipur (লক্ষ্মীপুর)</option>
+                  <option value="Noakhali" data-delivery="130">Noakhali (নোয়াখালী)</option>
+                  <option value="Brahmanbaria" data-delivery="130">Brahmanbaria (ব্রাহ্মণবাড়িয়া)</option>
+                </optgroup>
+                <optgroup label="সিলেট বিভাগ">
+                  <option value="Sylhet" data-delivery="130">Sylhet (সিলেট)</option>
+                  <option value="Moulvibazar" data-delivery="130">Moulvibazar (মৌলভীবাজার)</option>
+                  <option value="Habiganj" data-delivery="130">Habiganj (হবিগঞ্জ)</option>
+                  <option value="Sunamganj" data-delivery="130">Sunamganj (সুনামগঞ্জ)</option>
+                </optgroup>
+                <optgroup label="রাজশাহী বিভাগ">
+                  <option value="Rajshahi" data-delivery="130">Rajshahi (রাজশাহী)</option>
+                  <option value="Chapainawabganj" data-delivery="130">Chapainawabganj (চাঁপাইনবাবগঞ্জ)</option>
+                  <option value="Natore" data-delivery="130">Natore (নাটোর)</option>
+                  <option value="Naogaon" data-delivery="130">Naogaon (নওগাঁ)</option>
+                  <option value="Pabna" data-delivery="130">Pabna (পাবনা)</option>
+                  <option value="Sirajganj" data-delivery="130">Sirajganj (সিরাজগঞ্জ)</option>
+                  <option value="Bogura" data-delivery="130">Bogura (বগুড়া)</option>
+                  <option value="Joypurhat" data-delivery="130">Joypurhat (জয়পুরহাট)</option>
+                </optgroup>
+                <optgroup label="খুলনা বিভাগ">
+                  <option value="Khulna" data-delivery="130">Khulna (খুলনা)</option>
+                  <option value="Bagerhat" data-delivery="130">Bagerhat (বাগেরহাট)</option>
+                  <option value="Satkhira" data-delivery="130">Satkhira (সাতক্ষীরা)</option>
+                  <option value="Jessore" data-delivery="130">Jessore (যশোর)</option>
+                  <option value="Magura" data-delivery="130">Magura (মাগুরা)</option>
+                  <option value="Narail" data-delivery="130">Narail (নড়াইল)</option>
+                  <option value="Jhenaidah" data-delivery="130">Jhenaidah (ঝিনাইদহ)</option>
+                  <option value="Kushtia" data-delivery="130">Kushtia (কুষ্টিয়া)</option>
+                  <option value="Chuadanga" data-delivery="130">Chuadanga (চুয়াডাঙ্গা)</option>
+                  <option value="Meherpur" data-delivery="130">Meherpur (মেহেরপুর)</option>
+                </optgroup>
+                <optgroup label="বরিশাল বিভাগ">
+                  <option value="Barisal" data-delivery="130">Barisal (বরিশাল)</option>
+                  <option value="Bhola" data-delivery="130">Bhola (ভোলা)</option>
+                  <option value="Patuakhali" data-delivery="130">Patuakhali (পটুয়াখালী)</option>
+                  <option value="Pirojpur" data-delivery="130">Pirojpur (পিরোজপুর)</option>
+                  <option value="Jhalokati" data-delivery="130">Jhalokati (ঝালকাঠি)</option>
+                  <option value="Barguna" data-delivery="130">Barguna (বরগুনা)</option>
+                </optgroup>
+                <optgroup label="রংপুর বিভাগ">
+                  <option value="Rangpur" data-delivery="130">Rangpur (রংপুর)</option>
+                  <option value="Dinajpur" data-delivery="130">Dinajpur (দিনাজপুর)</option>
+                  <option value="Thakurgaon" data-delivery="130">Thakurgaon (ঠাকুরগাঁও)</option>
+                  <option value="Panchagarh" data-delivery="130">Panchagarh (পঞ্চগড়)</option>
+                  <option value="Nilphamari" data-delivery="130">Nilphamari (নীলফামারী)</option>
+                  <option value="Lalmonirhat" data-delivery="130">Lalmonirhat (লালমনিরহাট)</option>
+                  <option value="Kurigram" data-delivery="130">Kurigram (কুড়িগ্রাম)</option>
+                  <option value="Gaibandha" data-delivery="130">Gaibandha (গাইবান্ধা)</option>
+                </optgroup>
+                <optgroup label="ময়মনসিংহ বিভাগ">
+                  <option value="Mymensingh" data-delivery="130">Mymensingh (ময়মনসিংহ)</option>
+                  <option value="Jamalpur" data-delivery="130">Jamalpur (জামালপুর)</option>
+                  <option value="Netrokona" data-delivery="130">Netrokona (নেত্রকোণা)</option>
+                  <option value="Sherpur" data-delivery="130">Sherpur (শেরপুর)</option>
+                </optgroup>
+              </select>
+            </div>
+            <span class="kr-form-error" id="districtError"></span>
+          </div>
+
+          <div class="kr-form-group-sm">
+            <label class="kr-form-label" for="customerAddress">
+              <span data-en="Full Address" data-bn="সম্পূর্ণ ঠিকানা">Full Address</span>
+              <span class="kr-form-required">*</span>
+            </label>
+            <div class="kr-input-wrap">
+              <svg class="kr-input-icon kr-input-icon--top" xmlns="http://www.w3.org/2000/svg"
+                   width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              <textarea id="customerAddress" name="address" class="kr-input kr-textarea" rows="2"
+                placeholder="House no, Road, Area, Thana..."
+                data-placeholder-en="House no, Road, Area, Thana..."
+                data-placeholder-bn="বাড়ি নং, রোড, এলাকা, থানা..."
+                aria-required="true"></textarea>
+            </div>
+            <span class="kr-form-error" id="addressError"></span>
+          </div>
+        </div>
+
+        <!-- ③ Coupon -->
+        <div class="kr-summary-box">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            <span data-en="Coupon Code" data-bn="কুপন কোড">Coupon Code</span>
+          </div>
+          <div class="kr-coupon-wrap">
+            <div class="kr-input-wrap" style="flex:1">
+              <svg class="kr-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+              <input type="text" id="couponInput" name="coupon" class="kr-input"
+                placeholder="Enter A Valid Coupon Code"
+                data-placeholder-en="Enter A Valid Coupon Code"
+                data-placeholder-bn="একটি বৈধ কুপন কোড লিখুন"
+                style="text-transform:uppercase" />
+            </div>
+            <button type="button" class="kr-btn kr-btn--secondary" id="applyCouponBtn">
+              <span data-en="Apply" data-bn="প্রয়োগ">Apply</span>
+            </button>
+          </div>
+          <span class="kr-coupon-feedback" id="couponFeedback"></span>
+        </div>
+
+        <!-- ④ Payment Method -->
+        <div class="kr-summary-box">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+            <span data-en="Payment Method" data-bn="পেমেন্ট পদ্ধতি">Payment Method</span>
+          </div>
+          <div class="kr-payment-methods" role="radiogroup">
+            <label class="kr-payment-card kr-payment-card--cod">
+              <input type="radio" name="payment" value="cod" checked class="kr-payment-radio" />
+              <div class="kr-payment-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="#22c55e" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              </div>
+              <div class="kr-payment-card__info">
+                <strong data-en="Cash on Delivery" data-bn="ক্যাশ অন ডেলিভারি">Cash on Delivery</strong>
+                <span data-en="Pay when you receive" data-bn="পণ্য পেলে পেমেন্ট করুন">Pay when you receive</span>
+              </div>
+              <svg class="kr-payment-card__check" xmlns="http://www.w3.org/2000/svg"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </label>
+
+            <label class="kr-payment-card kr-payment-card--bkash">
+              <input type="radio" name="payment" value="bkash" class="kr-payment-radio" />
+              <div class="kr-payment-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="#e20074" stroke-width="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+              </div>
+              <div class="kr-payment-card__info">
+                <strong>bKash</strong>
+                <span>01306267594</span>
+              </div>
+              <svg class="kr-payment-card__check" xmlns="http://www.w3.org/2000/svg"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </label>
+
+            <label class="kr-payment-card kr-payment-card--nagad">
+              <input type="radio" name="payment" value="nagad" class="kr-payment-radio" />
+              <div class="kr-payment-card__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="#ff6f00" stroke-width="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+              </div>
+              <div class="kr-payment-card__info">
+                <strong>Nagad</strong>
+                <span>01935158745</span>
+              </div>
+              <svg class="kr-payment-card__check" xmlns="http://www.w3.org/2000/svg"
+                   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </label>
+          </div>
+        </div>
+
+        <!-- bKash Panel -->
+        <div class="kr-payment-panel kr-payment-panel--bkash" id="bkashPanel" hidden>
+          <div class="kr-payment-panel__inner">
+            <p class="kr-payment-panel__title"
+               data-en="bKash Payment Instructions" data-bn="বিকাশ পেমেন্ট নির্দেশনা">
+               bKash Payment Instructions
+            </p>
+            <ol class="kr-payment-panel__steps">
+              <li data-en="Open your bKash app" data-bn="আপনার বিকাশ অ্যাপ খুলুন">Open your bKash app</li>
+              <li>Send Money → <strong>01306267594</strong></li>
+              <li data-en="Enter amount and complete payment" data-bn="পরিমাণ দিন এবং পেমেন্ট সম্পন্ন করুন">Enter amount and complete payment</li>
+              <li data-en="Enter Transaction ID below" data-bn="নিচে ট্র্যানজেকশন ID দিন">Enter Transaction ID below</li>
+            </ol>
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label"
+                data-en="bKash Transaction ID" data-bn="বিকাশ ট্র্যানজেকশন ID">bKash Transaction ID</label>
+              <input type="text" id="bkashTrxId" class="kr-input" placeholder="e.g. 8N6Y5RF3GT" />
+            </div>
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label"
+                data-en="Amount Sent (Advance)" data-bn="পাঠানো পরিমাণ (অগ্রিম)">Amount Sent (Advance)</label>
+              <input type="number" id="bkashAdvance" class="kr-input" placeholder="0" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Nagad Panel -->
+        <div class="kr-payment-panel kr-payment-panel--nagad" id="nagadPanel" hidden>
+          <div class="kr-payment-panel__inner">
+            <p class="kr-payment-panel__title"
+               data-en="Nagad Payment Instructions" data-bn="নগদ পেমেন্ট নির্দেশনা">
+               Nagad Payment Instructions
+            </p>
+            <ol class="kr-payment-panel__steps">
+              <li data-en="Open your Nagad app" data-bn="আপনার নগদ অ্যাপ খুলুন">Open your Nagad app</li>
+              <li>Send Money → <strong>01935158745</strong></li>
+              <li data-en="Enter amount and complete payment" data-bn="পরিমাণ দিন এবং পেমেন্ট সম্পন্ন করুন">Enter amount and complete payment</li>
+              <li data-en="Enter Transaction ID below" data-bn="নিচে ট্র্যানজেকশন ID দিন">Enter Transaction ID below</li>
+            </ol>
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label"
+                data-en="Nagad Transaction ID" data-bn="নগদ ট্র্যানজেকশন ID">Nagad Transaction ID</label>
+              <input type="text" id="nagadTrxId" class="kr-input" placeholder="e.g. NAG123456" />
+            </div>
+            <div class="kr-form-group-sm">
+              <label class="kr-form-label"
+                data-en="Amount Sent (Advance)" data-bn="পাঠানো পরিমাণ (অগ্রিম)">Amount Sent (Advance)</label>
+              <input type="number" id="nagadAdvance" class="kr-input" placeholder="0" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ⑤ Order Note -->
+        <div class="kr-summary-box">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span data-en="Order Note (Optional)" data-bn="অর্ডার নোট (ঐচ্ছিক)">Order Note (Optional)</span>
+          </div>
+          <textarea id="orderNote" name="note" class="kr-input kr-textarea" rows="2"
+            placeholder="Any special instructions..."
+            data-placeholder-en="Any special instructions..."
+            data-placeholder-bn="যেকোনো বিশেষ নির্দেশনা..."></textarea>
+        </div>
+
+        <!-- ⑥ Order Summary -->
+        <div class="kr-summary-box" id="orderSummaryBox">
+          <div class="kr-summary-box__title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span data-en="Order Summary" data-bn="অর্ডার সারসংক্ষেপ">Order Summary</span>
+          </div>
+          <div id="summaryProductsList"></div>
+          <div class="kr-summary-row">
+            <span data-en="Subtotal" data-bn="মূল্য">Subtotal</span>
+            <span id="summarySubtotal">৳0</span>
+          </div>
+          <div class="kr-summary-row">
+            <span data-en="Shipping" data-bn="ডেলিভারি">Shipping</span>
+            <span id="summaryShipping">
+              <span data-en="Select district" data-bn="জেলা নির্বাচন করুন">Select district</span>
+            </span>
+          </div>
+          <div class="kr-summary-row" id="summaryDiscountLine" style="display:none">
+            <span data-en="Discount" data-bn="ছাড়">Discount</span>
+            <span id="summaryDiscount" style="color:var(--brand-coral)">-৳0</span>
+          </div>
+          <div class="kr-summary-row" id="summaryAdvanceLine" style="display:none">
+            <span data-en="Advance Paid" data-bn="অগ্রিম পেমেন্ট">Advance Paid</span>
+            <span id="summaryAdvance" style="color:var(--brand-coral)">-৳0</span>
+          </div>
+          <div class="kr-summary-row kr-summary-row--total">
+            <span data-en="Total" data-bn="মোট">Total</span>
+            <span id="summaryTotal">৳0</span>
+          </div>
+          <div id="summaryRemainingWrap" style="
+            display:none; justify-content:space-between; align-items:center;
+            background:rgba(255,96,68,.08); border:1px solid rgba(255,96,68,.2);
+            border-radius:.5rem; padding:8px 12px; margin-top:6px;
+            font-size:.875rem; font-weight:700; color:var(--brand-coral)">
+            <span data-en="Pay on Delivery (COD)" data-bn="ডেলিভারিতে পেমেন্ট (COD)">Pay on Delivery (COD)</span>
+            <span id="summaryRemaining">৳0</span>
+          </div>
+        </div>
+
+        <!-- ⑦ Submit -->
+        <button type="submit"
+                class="kr-btn kr-btn--primary kr-btn--lg kr-btn--full kr-btn--confirm-shake"
+                id="submitOrderBtn">
+          <svg class="kr-submit-icon--default" xmlns="http://www.w3.org/2000/svg"
+               width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <svg class="kr-submit-icon--loading" xmlns="http://www.w3.org/2000/svg"
+               width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               style="display:none; animation:spin .8s linear infinite">
+            <line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+            <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+          </svg>
+          <span class="kr-submit-text" data-en="Confirm Order" data-bn="অর্ডার কনফার্ম করুন">Confirm Order</span>
+        </button>
+
+        <!-- ⑧ WhatsApp Order -->
+        <a href="#" id="waOrderBtn" class="kr-wa-order-btn" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+          </svg>
+          <span data-en="Order on WhatsApp" data-bn="হোয়াটসঅ্যাপে অর্ডার করুন">Order on WhatsApp</span>
+        </a>
+
+        <p class="kr-form-note" style="margin-top:.75rem"
+          data-en="By placing an order, you agree to our return policy and terms of service."
+          data-bn="অর্ডার দিয়ে আপনি আমাদের রিটার্ন পলিসি এবং শর্তাবলীতে সম্মত হচ্ছেন।">
+          By placing an order, you agree to our return policy and terms of service.
+        </p>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TRUST SECTION
+══════════════════════════════════════ -->
+<section class="kr-section kr-trust-section" style="padding-top:2.5rem; padding-bottom:2.5rem">
+  <div class="kr-container">
+    <div class="kr-trust-grid anim-stagger">
+
+      <div class="kr-trust-card anim-fade-up" style="--delay:.1s">
+        <div class="kr-trust-card__icon-wrap">
+          <div class="kr-3d-icon kr-3d-icon--truck">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                 fill="none" stroke="#0369a1" stroke-width="1.5">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="kr-trust-card__title" data-en="Fast Delivery" data-bn="দ্রুত ডেলিভারি">Fast Delivery</h4>
+        <p class="kr-trust-card__desc"
+           data-en="Dhaka ৳60 • Outside ৳130 • Free on ৳2999+"
+           data-bn="ঢাকা ৳৬০ • বাইরে ৳১৩০ • ৳২৯৯৯+ এ ফ্রি">
+           Dhaka ৳60 • Outside ৳130 • Free on ৳2999+
+        </p>
+      </div>
+
+      <div class="kr-trust-card anim-fade-up" style="--delay:.2s">
+        <div class="kr-trust-card__icon-wrap">
+          <div class="kr-3d-icon kr-3d-icon--shield">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                 fill="none" stroke="#15803d" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="kr-trust-card__title" data-en="100% Original" data-bn="১০০% আসল">100% Original</h4>
+        <p class="kr-trust-card__desc"
+           data-en="Every product is authentic and quality-verified"
+           data-bn="প্রতিটি পণ্য খাঁটি এবং মানসম্পন্ন">
+           Every product is authentic and quality-verified
+        </p>
+      </div>
+
+      <div class="kr-trust-card anim-fade-up" style="--delay:.3s">
+        <div class="kr-trust-card__icon-wrap">
+          <div class="kr-3d-icon kr-3d-icon--return">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                 fill="none" stroke="#92400e" stroke-width="1.5">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="kr-trust-card__title" data-en="7-Day Return" data-bn="৭ দিন রিটার্ন">7-Day Return</h4>
+        <p class="kr-trust-card__desc"
+           data-en="Not satisfied? Return within 7 days"
+           data-bn="সন্তুষ্ট নন? ৭ দিনের মধ্যে ফেরত দিন">
+           Not satisfied? Return within 7 days
+        </p>
+      </div>
+
+      <div class="kr-trust-card anim-fade-up" style="--delay:.4s">
+        <div class="kr-trust-card__icon-wrap">
+          <div class="kr-3d-icon kr-3d-icon--cod">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                 fill="none" stroke="#6d28d9" stroke-width="1.5">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+          </div>
+        </div>
+        <h4 class="kr-trust-card__title" data-en="Cash on Delivery" data-bn="ক্যাশ অন ডেলিভারি">Cash on Delivery</h4>
+        <p class="kr-trust-card__desc"
+           data-en="Pay when you receive. Safe and hassle-free"
+           data-bn="পণ্য পেলে পেমেন্ট করুন। নিরাপদ">
+           Pay when you receive. Safe and hassle-free
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     REVIEWS
+══════════════════════════════════════ -->
+<section class="kr-section kr-reviews-section" id="kr-reviews" style="padding-top:2.5rem">
+  <div class="kr-container">
+    <div class="kr-section__header anim-fade-up">
+      <span class="kr-section__eyebrow"
+        data-en="Customer Reviews" data-bn="গ্রাহক পর্যালোচনা">Customer Reviews</span>
+      <h2 class="kr-section__title"
+        data-en="What Our Customers Say" data-bn="আমাদের গ্রাহকরা কী বলেন">What Our Customers Say</h2>
+      <div class="kr-reviews__overall">
+        <span class="kr-reviews__big-rating">4.9</span>
+        <div>
+          <div class="kr-stars kr-stars--lg">★★★★★</div>
+          <p class="kr-text-muted"
+            data-en="Based on 307 reviews" data-bn="৩০৭টি পর্যালোচনার উপর ভিত্তি করে">
+            Based on 307 reviews
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="kr-reviews-grid anim-stagger">
+
+      <div class="kr-review-card anim-fade-up" style="--delay:.1s">
+        <div class="kr-review-card__top">
+          <div class="kr-review-card__avatar">RK</div>
+          <div>
+            <p class="kr-review-card__name">Rakib Khan</p>
+            <p class="kr-review-card__location"
+               data-en="Dhaka, Bangladesh" data-bn="ঢাকা, বাংলাদেশ">Dhaka, Bangladesh</p>
+          </div>
+          <span class="kr-review-card__verified"
+            data-en="Verified" data-bn="যাচাইকৃত">Verified</span>
+        </div>
+        <div class="kr-stars">★★★★★</div>
+        <p class="kr-review-card__text"
+          data-en="Absolutely premium quality! The Royal Classic Polo is worth every taka. Fast delivery, great packaging. Will definitely order again."
+          data-bn="একদম প্রিমিয়াম মান! রয়্যাল ক্লাসিক পোলো প্রতিটি টাকার যোগ্য। দ্রুত ডেলিভারি, দারুণ প্যাকেজিং।">
+          Absolutely premium quality! The Royal Classic Polo is worth every taka. Fast delivery, great packaging. Will definitely order again.
+        </p>
+        <div class="kr-review-card__product"
+          data-en="Royal Classic Polo — Size L"
+          data-bn="রয়্যাল ক্লাসিক পোলো — সাইজ L">Royal Classic Polo — Size L</div>
+      </div>
+
+      <div class="kr-review-card anim-fade-up" style="--delay:.2s">
+        <div class="kr-review-card__top">
+          <div class="kr-review-card__avatar" style="background:linear-gradient(135deg,#2d5a8e,#1a3a5c)">SH</div>
+          <div>
+            <p class="kr-review-card__name">Sumaiya Hossain</p>
+            <p class="kr-review-card__location"
+               data-en="Chittagong, Bangladesh" data-bn="চট্টগ্রাম, বাংলাদেশ">Chittagong, Bangladesh</p>
+          </div>
+          <span class="kr-review-card__verified"
+            data-en="Verified" data-bn="যাচাইকৃত">Verified</span>
+        </div>
+        <div class="kr-stars">★★★★★</div>
+        <p class="kr-review-card__text"
+          data-en="Bought the Elite Oxford Shirt for my husband. He loves it! The fabric is so smooth and the fit is perfect."
+          data-bn="আমার স্বামীর জন্য এলিট অক্সফোর্ড শার্ট কিনেছি। তিনি এটা ভালোবাসেন! কাপড় এত নরম।">
+          Bought the Elite Oxford Shirt for my husband. He loves it! The fabric is so smooth and the fit is perfect.
+        </p>
+        <div class="kr-review-card__product"
+          data-en="Elite Oxford Shirt — Size XL"
+          data-bn="এলিট অক্সফোর্ড শার্ট — সাইজ XL">Elite Oxford Shirt — Size XL</div>
+      </div>
+
+      <div class="kr-review-card anim-fade-up" style="--delay:.3s">
+        <div class="kr-review-card__top">
+          <div class="kr-review-card__avatar" style="background:linear-gradient(135deg,#556B2F,#3a4d1f)">MA</div>
+          <div>
+            <p class="kr-review-card__name">Mehedi Alam</p>
+            <p class="kr-review-card__location"
+               data-en="Sylhet, Bangladesh" data-bn="সিলেট, বাংলাদেশ">Sylhet, Bangladesh</p>
+          </div>
+          <span class="kr-review-card__verified"
+            data-en="Verified" data-bn="যাচাইকৃত">Verified</span>
+        </div>
+        <div class="kr-stars">★★★★★</div>
+        <p class="kr-review-card__text"
+          data-en="Ordered the Luxe Casual Tee in olive. The quality is insane for this price. Comfortable and stylish!"
+          data-bn="অলিভ রঙে লাক্স ক্যাজুয়াল টি অর্ডার করেছিলাম। এত কম দামে এত ভালো মান। আরামদায়ক এবং স্টাইলিশ!">
+          Ordered the Luxe Casual Tee in olive. The quality is insane for this price. Comfortable and stylish!
+        </p>
+        <div class="kr-review-card__product"
+          data-en="Luxe Casual Tee — Size M"
+          data-bn="লাক্স ক্যাজুয়াল টি — সাইজ M">Luxe Casual Tee — Size M</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FAQ + POLICIES
+══════════════════════════════════════ -->
+<section class="kr-section kr-faq-section" id="kr-faq" style="padding-top:2.5rem">
+  <div class="kr-container">
+    <div class="kr-section__header anim-fade-up">
+      <span class="kr-section__eyebrow" data-en="FAQ" data-bn="সাধারণ প্রশ্ন">FAQ</span>
+      <h2 class="kr-section__title"
+        data-en="Frequently Asked Questions" data-bn="প্রায়শই জিজ্ঞাসিত প্রশ্নসমূহ">
+        Frequently Asked Questions
+      </h2>
+    </div>
+
+    <div class="kr-faq-list anim-fade-up">
+
+      <div class="kr-faq-item">
+        <button class="kr-faq-item__q" aria-expanded="false">
+          <span data-en="How long does delivery take?" data-bn="ডেলিভারি কতদিনে হয়?">How long does delivery take?</span>
+          <svg class="kr-faq-item__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="kr-faq-item__a">
+          <p data-en="Dhaka: 1–2 business days. Outside Dhaka: 2–4 business days via Pathao Courier."
+             data-bn="ঢাকা: ১-২ কার্যদিবস। ঢাকার বাইরে: ২-৪ কার্যদিবস (পাঠাও কুরিয়ার)।">
+             Dhaka: 1–2 business days. Outside Dhaka: 2–4 business days via Pathao Courier.
+          </p>
+        </div>
+      </div>
+
+      <div class="kr-faq-item">
+        <button class="kr-faq-item__q" aria-expanded="false">
+          <span data-en="What payment methods are accepted?" data-bn="কোন পেমেন্ট পদ্ধতি গ্রহণযোগ্য?">What payment methods are accepted?</span>
+          <svg class="kr-faq-item__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="kr-faq-item__a">
+          <p data-en="COD, bKash (01306267594), and Nagad (01935158745)."
+             data-bn="COD, বিকাশ (০১৩০৬২৬৭৫৯৪), এবং নগদ (০১৯৩৫১৫৮৭৪৫)।">
+             COD, bKash (01306267594), and Nagad (01935158745).
+          </p>
+        </div>
+      </div>
+
+      <div class="kr-faq-item">
+        <button class="kr-faq-item__q" aria-expanded="false">
+          <span data-en="How do I use a coupon code?" data-bn="কুপন কোড কিভাবে ব্যবহার করব?">How do I use a coupon code?</span>
+          <svg class="kr-faq-item__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="kr-faq-item__a">
+          <p data-en="Use KORA10 for 10% off or APNALOK20 for 20% off in the coupon field of the order form."
+             data-bn="অর্ডার ফর্মের কুপন ফিল্ডে KORA10 (১০% ছাড়) বা APNALOK20 (২০% ছাড়) লিখুন।">
+             Use KORA10 for 10% off or APNALOK20 for 20% off in the coupon field.
+          </p>
+        </div>
+      </div>
+
+      <div class="kr-faq-item">
+        <button class="kr-faq-item__q" aria-expanded="false">
+          <span data-en="Are the sizes accurate?" data-bn="সাইজ কি সঠিক?">Are the sizes accurate?</span>
+          <svg class="kr-faq-item__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="kr-faq-item__a">
+          <p data-en="M: chest 38–40in • L: 40–42in • XL: 42–44in. When in doubt, size up. Use the Size Chart button for detailed measurements."
+             data-bn="M: বুক ৩৮-৪০ ইঞ্চি • L: ৪০-৪২ ইঞ্চি • XL: ৪২-৪৪ ইঞ্চি। সন্দেহ হলে এক সাইজ বড় নিন।">
+             M: chest 38–40in • L: 40–42in • XL: 42–44in. When in doubt, size up.
+          </p>
+        </div>
+      </div>
+
+      <div class="kr-faq-item">
+        <button class="kr-faq-item__q" aria-expanded="false">
+          <span data-en="How do I track my order?" data-bn="আমার অর্ডার কিভাবে ট্র্যাক করব?">How do I track my order?</span>
+          <svg class="kr-faq-item__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="kr-faq-item__a">
+          <p data-en="After your order is confirmed, we will call you with delivery updates. You can also WhatsApp us with your Order ID anytime."
+             data-bn="অর্ডার কনফার্ম হওয়ার পর আমরা আপনাকে ডেলিভারির আপডেট জানাতে কল করব। আপনি যেকোনো সময় আপনার Order ID দিয়ে WhatsApp করতে পারেন।">
+             After confirmation, we will call you with updates. You can also WhatsApp us with your Order ID anytime.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- POLICIES -->
+    <div class="kr-policies">
+
+      <div class="kr-policy-block anim-fade-up">
+        <div class="kr-policy-block__header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+          </svg>
+          <h3 data-en="Return Policy" data-bn="রিটার্ন পলিসি">Return Policy</h3>
+        </div>
+        <div class="kr-policy-block__body">
+          <p data-en="We offer a 7-day return policy from the date of delivery. Items must be unused, unwashed, and in original condition with all tags attached."
+             data-bn="ডেলিভারির তারিখ থেকে ৭ দিনের মধ্যে পণ্য ফেরত দেওয়া যাবে। পণ্য অবশ্যই অব্যবহৃত, অধোয়া এবং মূল অবস্থায় থাকতে হবে।">
+             We offer a 7-day return policy from the date of delivery. Items must be unused, unwashed, and in original condition with all tags attached.
+          </p>
+          <ul class="kr-policy-list">
+            <li data-en="Contact us via WhatsApp within 7 days of receiving your order."
+                data-bn="অর্ডার পাওয়ার ৭ দিনের মধ্যে WhatsApp এ যোগাযোগ করুন।">
+                Contact us via WhatsApp within 7 days of receiving your order.</li>
+            <li data-en="Refunds are issued as store credit or bKash/Nagad upon request."
+                data-bn="রিফান্ড স্টোর ক্রেডিট বা অনুরোধে বিকাশ/নগদে দেওয়া হয়।">
+                Refunds are issued as store credit or bKash/Nagad upon request.</li>
+            <li data-en="Items that are worn, washed, or damaged are not eligible for return."
+                data-bn="পরা, ধোয়া বা ক্ষতিগ্রস্ত পণ্য রিটার্নযোগ্য নয়।">
+                Items that are worn, washed, or damaged are not eligible for return.</li>
+            <li data-en="Return shipping cost is borne by the customer unless the item is defective."
+                data-bn="পণ্য ত্রুটিপূর্ণ না হলে রিটার্ন শিপিং খরচ গ্রাহক বহন করবেন।">
+                Return shipping cost is borne by the customer unless the item is defective.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="kr-policy-block anim-fade-up" style="--delay:.1s">
+        <div class="kr-policy-block__header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <h3 data-en="Privacy Policy" data-bn="প্রাইভেসি পলিসি">Privacy Policy</h3>
+        </div>
+        <div class="kr-policy-block__body">
+          <p data-en="Kora Royal respects your privacy. We collect only information necessary to process orders and improve our services."
+             data-bn="কোরা রয়্যাল আপনার গোপনীয়তাকে সম্মান করে। আমরা শুধুমাত্র অর্ডার প্রক্রিয়া ও সেবা উন্নয়নের জন্য প্রয়োজনীয় তথ্য সংগ্রহ করি।">
+             Kora Royal respects your privacy. We collect only information necessary to process orders and improve services.
+          </p>
+          <ul class="kr-policy-list">
+            <li data-en="We collect: name, phone number, email, and delivery address."
+                data-bn="আমরা সংগ্রহ করি: নাম, ফোন নম্বর, ইমেইল এবং ডেলিভারি ঠিকানা।">
+                We collect: name, phone, email, and delivery address.</li>
+            <li data-en="Your data is used solely for order fulfillment and communication."
+                data-bn="আপনার তথ্য শুধুমাত্র অর্ডার পূরণ ও যোগাযোগের জন্য ব্যবহার করা হয়।">
+                Your data is used solely for order fulfillment and communication.</li>
+            <li data-en="We do not sell or share your personal information with third parties."
+                data-bn="আমরা আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের কাছে বিক্রি বা শেয়ার করি না।">
+                We do not sell or share your information with third parties.</li>
+            <li data-en="We use GTM and analytics tools to improve user experience."
+                data-bn="আমরা ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে GTM এবং বিশ্লেষণ সরঞ্জাম ব্যবহার করি।">
+                We use GTM and analytics tools to improve user experience.</li>
+            <li data-en="For privacy concerns, contact contact@koraroyal.com"
+                data-bn="গোপনীয়তা সংক্রান্ত উদ্বেগের জন্য contact@koraroyal.com এ যোগাযোগ করুন।">
+                For privacy concerns, contact contact@koraroyal.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="kr-policy-block anim-fade-up" style="--delay:.2s">
+        <div class="kr-policy-block__header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="var(--brand-coral)" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          <h3 data-en="Terms of Service" data-bn="সেবার শর্তাবলী">Terms of Service</h3>
+        </div>
+        <div class="kr-policy-block__body">
+          <p data-en="By placing an order on Kora Royal, you agree to the following terms and conditions."
+             data-bn="কোরা রয়্যালে অর্ডার দিয়ে আপনি নিচের শর্তাবলীতে সম্মত হচ্ছেন।">
+             By placing an order on Kora Royal, you agree to the following terms.
+          </p>
+          <ul class="kr-policy-list">
+            <li data-en="All orders are subject to product availability and confirmation."
+                data-bn="সব অর্ডার পণ্যের প্রাপ্যতা এবং নিশ্চিতকরণের উপর নির্ভরশীল।">
+                All orders are subject to availability and confirmation.</li>
+            <li data-en="Prices are in Bangladeshi Taka (BDT) and subject to change without prior notice."
+                data-bn="মূল্য বাংলাদেশী টাকায় (BDT) এবং পূর্ব বিজ্ঞপ্তি ছাড়াই পরিবর্তন হতে পারে।">
+                Prices are in BDT and subject to change without prior notice.</li>
+            <li data-en="Kora Royal reserves the right to cancel orders in case of errors or fraud."
+                data-bn="ত্রুটি বা প্রতারণার ক্ষেত্রে কোরা রয়্যাল অর্ডার বাতিল করার অধিকার রাখে।">
+                We reserve the right to cancel orders in case of errors or fraud.</li>
+            <li data-en="Delivery timelines are estimates and may vary due to courier or weather."
+                data-bn="ডেলিভারির সময়সীমা আনুমানিক এবং কুরিয়ার বা আবহাওয়ার কারণে পরিবর্তন হতে পারে।">
+                Delivery timelines are estimates and may vary.</li>
+            <li data-en="By using our website, you confirm you are at least 18 years old."
+                data-bn="আমাদের ওয়েবসাইট ব্যবহার করে আপনি নিশ্চিত করছেন যে আপনার বয়স কমপক্ষে ১৮ বছর।">
+                By using our site you confirm you are at least 18 years old.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="kr-footer" role="contentinfo">
+  <div class="kr-container">
+    <div class="kr-footer__grid">
+
+      <div class="kr-footer__brand">
+        <div class="kr-navbar__logo-mark kr-footer__logo-mark">KR</div>
+        <p class="kr-footer__tagline"
+          data-en="Redefine Your Style" data-bn="স্টাইলকে নতুনভাবে সংজ্ঞায়িত করুন">
+          Redefine Your Style
+        </p>
+        <p class="kr-footer__about"
+          data-en="Kora Royal brings you premium fashion crafted for the modern individual. Quality you can feel, style you can trust."
+          data-bn="কোরা রয়্যাল আধুনিক মানুষের জন্য প্রিমিয়াম ফ্যাশন নিয়ে আসে। অনুভব করা যায় এমন মান, বিশ্বাস করা যায় এমন স্টাইল।">
+          Kora Royal brings you premium fashion crafted for the modern individual. Quality you can feel, style you can trust.
+        </p>
+        <div class="kr-footer__socials">
+          <a href="https://www.facebook.com/thekoraport" target="_blank" rel="noopener"
+             class="kr-social-btn" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/eldoradotale/" target="_blank" rel="noopener"
+             class="kr-social-btn" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/8801935158745?text=Hello%20Kora%20Royal!%20I%20need%20help%20with%20my%20order."
+             target="_blank" rel="noopener" class="kr-social-btn" aria-label="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="kr-footer__col">
+        <h4 class="kr-footer__col-title" data-en="Contact Us" data-bn="যোগাযোগ করুন">Contact Us</h4>
+        <ul class="kr-footer__links">
+          <li>
+            <a href="tel:+8801935158745">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 15"/>
+              </svg>
+              +880 1935-158745
+            </a>
+          </li>
+          <li>
+            <a href="mailto:contact@koraroyal.com">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              contact@koraroyal.com
+            </a>
+          </li>
+          <li>
+            <a href="https://wa.me/8801935158745?text=Hello%20Kora%20Royal!%20I%20need%20help%20with%20my%20order."
+               target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="kr-footer__col">
+        <h4 class="kr-footer__col-title" data-en="Information" data-bn="তথ্য">Information</h4>
+        <ul class="kr-footer__links">
+          <li><a href="#kr-faq" data-en="FAQ" data-bn="প্রশ্নোত্তর">FAQ</a></li>
+          <li><a href="#kr-faq" data-en="Return Policy" data-bn="রিটার্ন পলিসি">Return Policy</a></li>
+          <li><a href="#kr-faq" data-en="Privacy Policy" data-bn="প্রাইভেসি পলিসি">Privacy Policy</a></li>
+          <li><a href="#kr-faq" data-en="Terms of Service" data-bn="সেবার শর্তাবলী">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="kr-footer__bottom">
+      <p data-en="© 2026 Kora Royal. All rights reserved."
+         data-bn="© ২০২৬ কোরা রয়্যাল। সর্বস্বত্ব সংরক্ষিত।">
+         © 2026 Kora Royal. All rights reserved.
+      </p>
+      <p class="kr-footer__payment-note"
+         data-en="We accept: COD • bKash • Nagad"
+         data-bn="আমরা গ্রহণ করি: COD • বিকাশ • নগদ">
+         We accept: COD • bKash • Nagad
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     FIXED BOTTOM ORDER BUTTON
+══════════════════════════════════════ -->
+<div class="kr-fixed-order-btn" id="kr-fixed-btn">
+  <a href="#kr-order-form" class="kr-btn kr-btn--primary kr-btn--main">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    <span data-en="Order Now — Fast Delivery" data-bn="এখনই অর্ডার করুন — দ্রুত ডেলিভারি">Order Now — Fast Delivery</span>
+  </a>
+  <a href="https://wa.me/8801935158745?text=Hello%20Kora%20Royal!%20I%20need%20help%20with%20my%20order."
+     target="_blank" rel="noopener" class="kr-btn--wa-mini" aria-label="WhatsApp">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+  </a>
+</div>
+
+<!-- ══════════════════════════════════════
+     SIZE CHART OVERLAY
+══════════════════════════════════════ -->
+<div id="sizeChartOverlay" class="kr-overlay" hidden>
+  <div class="kr-overlay__box" role="dialog" aria-modal="true" aria-labelledby="sizeChartTitle">
+    <div class="kr-overlay__header">
+      <h3 id="sizeChartTitle" class="kr-overlay__title"
+        data-en="Size Chart" data-bn="সাইজ চার্ট">Size Chart</h3>
+      <button id="sizeChartClose" class="kr-overlay__close" aria-label="Close size chart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div id="sizeChartBody" class="kr-overlay__body"></div>
+  </div>
+</div>
+
+<!-- Main JS -->
+<script src="js/main.js"></script>
+</body>
+</html>
