@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmed — Kora Royal</title>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-572LCW6F');</script>
+  <!-- End Google Tag Manager -->
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* Success page specific overrides */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    /* Confetti particles */
+    .kr-confetti-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .kr-confetti-particle {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+      opacity: 0;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Nav bar on success page */
+    .kr-success-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--navbar-bg);
+      border-bottom: 1px solid var(--navbar-border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      z-index: 100;
+      gap: 0.75rem;
+    }
+
+    .kr-success-nav__logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .kr-success-nav__controls {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Steps timeline */
+    .kr-steps {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .kr-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+
+    .kr-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border-subtle);
+      z-index: 0;
+    }
+
+    .kr-step.is-done:not(:last-child)::after {
+      background: var(--brand-coral);
+    }
+
+    .kr-step__dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      z-index: 1;
+      position: relative;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .kr-step.is-done .kr-step__dot {
+      background: var(--brand-coral);
+      color: #fff;
+    }
+
+    .kr-step.is-active .kr-step__dot {
+      background: var(--brand-coral);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(255,96,68,0.2);
+      animation: stepPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes stepPulse {
+      0%,100% { box-shadow: 0 0 0 4px rgba(255,96,68,0.2); }
+      50%      { box-shadow: 0 0 0 8px rgba(255,96,68,0.1); }
+    }
+
+    .kr-step__label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 6px;
+      max-width: 70px;
+    }
+
+    .kr-step.is-done .kr-step__label,
+    .kr-step.is-active .kr-step__label {
+      color: var(--brand-coral);
+    }
+
+    /* Dynamic Island on success */
+    .kr-success-island {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.3) scaleY(0.5);
+      opacity: 0;
+      z-index: 200;
+      pointer-events: none;
+      transition: all 500ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .kr-success-island.is-active {
+      opacity: 1;
+      transform: translateX(-50%) scaleX(1) scaleY(1);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-572LCW6F"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- Confetti -->
+  <div class="kr-confetti-wrap" id="confettiWrap" aria-hidden="true"></div>
+
+  <!-- Success Dynamic Island -->
+  <div class="kr-success-island kr-island__bubble" id="successIsland">
+    <div class="kr-island__icon">✅</div>
+    <div class="kr-island__content">
+      <p class="kr-island__title" id="s-islandTitle">Order Confirmed</p>
+      <p class="kr-island__body" id="s-islandBody">Thank you! We'll call you soon.</p>
+    </div>
+  </div>
+
+  <!-- Minimal Navbar -->
+  <nav class="kr-success-nav" role="navigation">
+    <a href="index.html" class="kr-success-nav__logo">
+      <div class="kr-navbar__logo-mark" style="width:36px;height:36px;font-size:0.75rem">KR</div>
+      <span style="font-family:var(--font-heading);font-weight:800;font-size:1.1rem;color:var(--text-primary)"
+        data-en="Kora Royal" data-bn="কোরা রয়্যাল">Kora Royal</span>
+    </a>
+    <div class="kr-success-nav__controls">
+      <button class="kr-navbar__control kr-navbar__lang" id="successLangToggle" aria-label="Toggle language">
+        <span id="successLangLabel">বাং</span>
+      </button>
+      <button class="kr-navbar__control kr-navbar__theme" id="successThemeToggle" aria-label="Toggle theme">
+        <svg id="sThemeSun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="sThemeMoon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Success Card -->
+  <main class="kr-success-page" style="padding-top: 80px;" role="main">
+    <div class="kr-success-card" id="successCard">
+
+      <!-- Animated Checkmark -->
+      <div class="kr-success__icon">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle
+            class="kr-checkmark-circle"
+            cx="45" cy="45" r="43"
+            stroke="#FF6044"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <polyline
+            class="kr-checkmark-check"
+            points="27,47 39,59 63,35"
+            stroke="#FF6044"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h1 class="kr-success__title"
+        data-en="Order Confirmed! 🎉"
+        data-bn="অর্ডার নিশ্চিত হয়েছে! 🎉">
+        Order Confirmed! 🎉
+      </h1>
+
+      <p class="kr-success__subtitle"
+        data-en="Thank you for your order! Our team will call you to confirm within 30 minutes."
+        data-bn="আপনার অর্ডারের জন্য ধন্যবাদ! আমাদের টিম ৩০ মিনিটের মধ্যে কনফার্মের জন্য আপনাকে কল করবে।">
+        Thank you for your order! Our team will call you to confirm within 30 minutes.
+      </p>
+
+      <!-- Order ID -->
+      <div class="kr-success__order-id">
+        <p class="kr-success__order-id-label"
+          data-en="Your Order ID" data-bn="আপনার অর্ডার আইডি">Your Order ID</p>
+        <p class="kr-success__order-id-value" id="successOrderId">KR-0001</p>
+      </div>
+
+      <!-- Status Steps -->
+      <div class="kr-steps" role="list" aria-label="Order status">
+        <div class="kr-step is-done" role="listitem">
+          <div class="kr-step__dot">✓</div>
+          <span class="kr-step__label" data-en="Placed" data-bn="অর্ডার দেওয়া হয়েছে">Placed</span>
+        </div>
+        <div class="kr-step is-active" role="listitem">
+          <div class="kr-step__dot">2</div>
+          <span class="kr-step__label" data-en="Confirming" data-bn="নিশ্চিত হচ্ছে">Confirming</span>
+        </div>
+        <div class="kr-step" role="listitem">
+          <div class="kr-step__dot">3</div>
+          <span class="kr-step__label" data-en="Packing" data-bn="প্যাকিং">Packing</span>
+        </div>
+        <div class="kr-step" role="listitem">
+          <div class="kr-step__dot">4</div>
+          <span class="kr-step__label" data-en="Shipped" data-bn="পাঠানো হয়েছে">Shipped</span>
+        </div>
+        <div class="kr-step" role="listitem">
+          <div class="kr-step__dot">5</div>
+          <span class="kr-step__label" data-en="Delivered" data-bn="ডেলিভারি হয়েছে">Delivered</span>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="kr-success__summary" id="successSummary">
+        <p class="kr-success__summary-title"
+          data-en="Order Summary" data-bn="অর্ডার সারসংক্ষেপ">Order Summary</p>
+
+        <div class="kr-success__summary-row">
+          <span data-en="Product" data-bn="পণ্য">Product</span>
+          <span id="sProduct">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Size / Color" data-bn="সাইজ / রঙ">Size / Color</span>
+          <span id="sVariant">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Quantity" data-bn="পরিমাণ">Quantity</span>
+          <span id="sQty">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Customer" data-bn="গ্রাহক">Customer</span>
+          <span id="sName">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Phone" data-bn="ফোন">Phone</span>
+          <span id="sPhone">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="District" data-bn="জেলা">District</span>
+          <span id="sDistrict">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Subtotal" data-bn="মূল্য">Subtotal</span>
+          <span id="sSubtotal">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Shipping" data-bn="ডেলিভারি">Shipping</span>
+          <span id="sShipping">—</span>
+        </div>
+        <div class="kr-success__summary-row" id="sDiscountRow" style="display:none">
+          <span data-en="Discount" data-bn="ছাড়">Discount</span>
+          <span id="sDiscount" style="color:var(--brand-coral)">—</span>
+        </div>
+        <div class="kr-success__summary-row kr-success__summary-row--total">
+          <span data-en="Total" data-bn="মোট">Total</span>
+          <span id="sTotal">—</span>
+        </div>
+        <div class="kr-success__summary-row">
+          <span data-en="Payment Method" data-bn="পেমেন্ট পদ্ধতি">Payment Method</span>
+          <span id="sPayment">—</span>
+        </div>
+      </div>
+
+      <!-- Remaining Amount (if advance paid) -->
+      <div class="kr-success__remaining" id="sRemainingWrap" style="display:none">
+        <span data-en="Remaining to pay (Cash on Delivery)" data-bn="বাকি পেমেন্ট (ক্যাশ অন ডেলিভারি)">
+          Remaining to pay (COD)
+        </span>
+        <span id="sRemaining">৳0</span>
+      </div>
+
+      <!-- Delivery Info -->
+      <div class="kr-success__delivery-info">
+        <div class="kr-success__delivery-icon">🚚</div>
+        <div class="kr-success__delivery-text">
+          <strong data-en="Estimated Delivery Time" data-bn="আনুমানিক ডেলিভারি সময়">
+            Estimated Delivery Time
+          </strong>
+          <p id="sDeliveryEst"
+            data-en="Dhaka: 1–2 business days • Outside Dhaka: 2–4 business days"
+            data-bn="ঢাকা: ১-২ কার্যদিবস • ঢাকার বাইরে: ২-৪ কার্যদিবস">
+            Dhaka: 1–2 business days • Outside Dhaka: 2–4 business days
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="kr-success__actions">
+        <a
+          href="#"
+          id="whatsappSupportBtn"
+          class="kr-btn kr-btn--whatsapp"
+          target="_blank"
+          rel="noopener"
+          aria-label="Chat on WhatsApp"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          <span data-en="WhatsApp Support" data-bn="হোয়াটসঅ্যাপ সাপোর্ট">WhatsApp Support</span>
+        </a>
+
+        <a href="index.html" class="kr-btn kr-btn--secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          <span data-en="Continue Shopping" data-bn="আরো কেনাকাটা করুন">Continue Shopping</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  // ─── Success Page Script ───────────────────────────────────────
+  (function() {
+    'use strict';
+
+    // ── 1. Theme & Language (from localStorage) ──
+    const savedTheme = localStorage.getItem('kr_theme') || 'light';
+    const savedLang  = localStorage.getItem('kr_lang')  || 'en';
+
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute('lang', savedLang === 'bn' ? 'bn' : 'en');
+
+    applyThemeIcons(savedTheme);
+    applyLang(savedLang);
+
+    // Theme toggle
+    document.getElementById('successThemeToggle')?.addEventListener('click', function() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('kr_theme', next);
+      applyThemeIcons(next);
+    });
+
+    // Lang toggle
+    document.getElementById('successLangToggle')?.addEventListener('click', function() {
+      const current = localStorage.getItem('kr_lang') || 'en';
+      const next = current === 'bn' ? 'en' : 'bn';
+      localStorage.setItem('kr_lang', next);
+      applyLang(next);
+    });
+
+    function applyThemeIcons(theme) {
+      const sun  = document.getElementById('sThemeSun');
+      const moon = document.getElementById('sThemeMoon');
+      if (!sun || !moon) return;
+      if (theme === 'dark') {
+        sun.style.display  = 'none';
+        moon.style.display = 'block';
+      } else {
+        sun.style.display  = 'block';
+        moon.style.display = 'none';
+      }
+    }
+
+    function applyLang(lang) {
+      const label = document.getElementById('successLangLabel');
+      if (label) label.textContent = lang === 'bn' ? 'EN' : 'বাং';
+
+      document.querySelectorAll('[data-en][data-bn]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text) el.textContent = text;
+      });
+
+      document.querySelectorAll('[data-placeholder-en][data-placeholder-bn]').forEach(el => {
+        const ph = el.getAttribute('data-placeholder-' + lang);
+        if (ph) el.placeholder = ph;
+      });
+    }
+
+    // ── 2. Load order data from localStorage ──
+    const orderData = JSON.parse(localStorage.getItem('kr_last_order') || '{}');
+
+    if (orderData.orderId) {
+      // Order ID
+      const oidEl = document.getElementById('successOrderId');
+      if (oidEl) oidEl.textContent = orderData.orderId;
+
+      // Update page title
+      document.title = `Order ${orderData.orderId} Confirmed — Kora Royal`;
+
+      // Populate summary
+      setText('sProduct',  orderData.productName  || '—');
+      setText('sVariant',  (orderData.size || '—') + ' / ' + (orderData.color || '—'));
+      setText('sQty',      orderData.qty + ' pc(s)');
+      setText('sName',     orderData.name     || '—');
+      setText('sPhone',    orderData.phone    || '—');
+      setText('sDistrict', orderData.district || '—');
+      setText('sSubtotal', '৳' + formatNum(orderData.subtotal));
+      setText('sShipping', orderData.shipping === 0 ? 'FREE 🎉' : '৳' + formatNum(orderData.shipping));
+      setText('sTotal',    '৳' + formatNum(orderData.total));
+      setText('sPayment',  formatPayment(orderData.payment));
+
+      // Discount row
+      if (orderData.discount && orderData.discount > 0) {
+        const discRow = document.getElementById('sDiscountRow');
+        const discEl  = document.getElementById('sDiscount');
+        if (discRow) discRow.style.display = 'flex';
+        if (discEl)  discEl.textContent = '-৳' + formatNum(orderData.discount);
+      }
+
+      // Remaining amount
+      if (orderData.advance && orderData.advance > 0) {
+        const remaining = Math.max(0, orderData.total - orderData.advance);
+        const remWrap = document.getElementById('sRemainingWrap');
+        const remEl   = document.getElementById('sRemaining');
+        if (remWrap) remWrap.style.display = 'flex';
+        if (remEl)   remEl.textContent = '৳' + formatNum(remaining);
+      }
+
+      // Delivery estimate
+      const estEl = document.getElementById('sDeliveryEst');
+      if (estEl && orderData.district) {
+        if (orderData.district.toLowerCase() === 'dhaka') {
+          estEl.setAttribute('data-en', 'Dhaka: 1–2 business days via Pathao Courier');
+          estEl.setAttribute('data-bn', 'ঢাকা: ১-২ কার্যদিবস (পাঠাও কুরিয়ার)');
+        } else {
+          estEl.setAttribute('data-en', 'Outside Dhaka: 2–4 business days via Pathao Courier');
+          estEl.setAttribute('data-bn', 'ঢাকার বাইরে: ২-৪ কার্যদিবস (পাঠাও কুরিয়ার)');
+        }
+        // Re-apply language
+        const lang = localStorage.getItem('kr_lang') || 'en';
+        const txt = estEl.getAttribute('data-' + lang);
+        if (txt) estEl.textContent = txt;
+      }
+
+      // WhatsApp support link
+      const waBtn = document.getElementById('whatsappSupportBtn');
+      if (waBtn) {
+        const msg = encodeURIComponent(
+          `Hello Kora Royal! I need help with my order.\nOrder ID: ${orderData.orderId}\nPhone: ${orderData.phone}`
+        );
+        waBtn.href = `https://wa.me/8801935158745?text=${msg}`;
+      }
+
+      // ── GTM Purchase Event ──
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'purchase',
+        dlv_order_id:      orderData.orderId,
+        dlv_value:         orderData.total,
+        dlv_currency:      'BDT',
+        dlv_item_name:     orderData.productName,
+        dlv_item_id:       orderData.productId || 'KR-PRD',
+        dlv_item_category: orderData.category  || 'Fashion',
+        dlv_item_variant:  (orderData.size || '') + '-' + (orderData.color || ''),
+        dlv_quantity:      orderData.qty,
+        dlv_shipping:      orderData.shipping,
+        dlv_discount:      orderData.discount  || 0,
+        dlv_coupon:        orderData.coupon     || '',
+        dlv_payment_method: orderData.payment,
+        dlv_customer_district: orderData.district
+      });
+
+    } else {
+      // No order data — maybe direct visit
+      document.getElementById('successOrderId').textContent = 'KR-XXXX';
+    }
+
+    // ── 3. Dynamic Island ──
+    setTimeout(function() {
+      const island = document.getElementById('successIsland');
+      const titleEl = document.getElementById('s-islandTitle');
+      const bodyEl  = document.getElementById('s-islandBody');
+      const lang    = localStorage.getItem('kr_lang') || 'en';
+
+      if (island) {
+        if (lang === 'bn') {
+          if (titleEl) titleEl.textContent = 'অর্ডার নিশ্চিত হয়েছে ✅';
+          if (bodyEl)  bodyEl.textContent  = 'আমরা আপনাকে শীঘ্রই কল করব!';
+        }
+        island.classList.add('is-active');
+
+        setTimeout(function() {
+          island.classList.remove('is-active');
+        }, 5000);
+      }
+    }, 800);
+
+    // ── 4. Confetti ──
+    const colors = ['#FF6044','#F7E998','#22c55e','#3b82f6','#a855f7','#f59e0b'];
+    const wrap   = document.getElementById('confettiWrap');
+
+    if (wrap) {
+      for (let i = 0; i < 60; i++) {
+        const p = document.createElement('div');
+        p.className = 'kr-confetti-particle';
+        p.style.cssText = `
+          left: ${Math.random() * 100}%;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          width:  ${6 + Math.random() * 8}px;
+          height: ${6 + Math.random() * 8}px;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+          animation-duration:  ${2 + Math.random() * 3}s;
+          animation-delay:     ${Math.random() * 1.5}s;
+          opacity: 1;
+        `;
+        wrap.appendChild(p);
+      }
+    }
+
+    // ── Helpers ──
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function formatNum(n) {
+      return parseInt(n || 0).toLocaleString('en-IN');
+    }
+
+    function formatPayment(p) {
+      const map = {
+        cod:    'Cash on Delivery (COD)',
+        bkash:  'bKash',
+        nagad:  'Nagad'
+      };
+      return map[p] || p || 'COD';
+    }
+
+  })();
+  </script>
+</body>
+</html>
