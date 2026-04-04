@@ -10,7 +10,7 @@
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-572LCW6F');</script>
+  })(window,document,'script','dataLayer','GTM-NB866PRS');</script>
   <!-- End Google Tag Manager -->
 
   <!-- Fonts -->
@@ -185,7 +185,7 @@
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-572LCW6F"
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NB866PRS"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Confetti -->
@@ -511,24 +511,32 @@
         waBtn.href = `https://wa.me/8801935158745?text=${msg}`;
       }
 
-      // ── GTM Purchase Event ──
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'purchase',
-        dlv_order_id:      orderData.orderId,
-        dlv_value:         orderData.total,
-        dlv_currency:      'BDT',
-        dlv_item_name:     orderData.productName,
-        dlv_item_id:       orderData.productId || 'KR-PRD',
-        dlv_item_category: orderData.category  || 'Fashion',
-        dlv_item_variant:  (orderData.size || '') + '-' + (orderData.color || ''),
-        dlv_quantity:      orderData.qty,
-        dlv_shipping:      orderData.shipping,
-        dlv_discount:      orderData.discount  || 0,
-        dlv_coupon:        orderData.coupon     || '',
-        dlv_payment_method: orderData.payment,
-        dlv_customer_district: orderData.district
-      });
+      // ── GTM Purchase Event — fires ONLY here (not in index.html) ──
+window.dataLayer = window.dataLayer || [];
+// Clear previous ecommerce data
+window.dataLayer.push({ ecommerce: null });
+window.dataLayer.push({
+  event: 'purchase',
+  ecommerce: {
+    transaction_id: orderData.orderId,
+    value:          orderData.total,
+    currency:       'BDT',
+    shipping:       orderData.shipping,
+    coupon:         orderData.coupon || '',
+    items:          orderData.items || [{
+      item_id:       orderData.productId   || 'KR-PRD',
+      item_name:     orderData.productName || '—',
+      item_category: orderData.category    || 'Fashion',
+      item_variant:  (orderData.size || '') + '-' + (orderData.color || ''),
+      price:         orderData.subtotal,
+      quantity:      orderData.qty
+    }]
+  },
+  dlv_customer_name:     orderData.name,
+  dlv_customer_phone:    orderData.phone,
+  dlv_customer_district: orderData.district,
+  dlv_payment_method:    orderData.payment
+});
 
     } else {
       // No order data — maybe direct visit
