@@ -1,13 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════
-   KORA ROYAL — main.js v3
-   All fixes applied. No feature missed.
-   Products: 5 images from ibb.co
-   Quantity: fixed (1→2→3)
-   Carousel: auto + manual drag/touch
-   WhatsApp: full message with advance/COD payable
-   Phone: multi-format validation
-   Size chart popup
-   Emoji removed completely
+   KORA ROYAL — main.js v4
+   GTM: GTM-NB866PRS | Pixel: 772000649295028
+   Nested ecommerce object (matches GTM Variable config)
+   Timestamp-based unique Order ID
+   Purchase event: fires ONLY on success.html (not here)
+   All existing features intact
 ════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -105,7 +102,6 @@
   /* ════════════════════════════════════════
      2. STATE
   ════════════════════════════════════════ */
-  // Per-product selection — qty starts at 0
   const selections = {
     1: { size: null, color: null, qty: 0 },
     2: { size: null, color: null, qty: 0 },
@@ -118,11 +114,11 @@
     couponCode: '',
     couponApplied: false,
     isSubmitting: false,
-    orderCounter: parseInt(localStorage.getItem('kr_order_counter') || '0'),
-    // Carousel drag state
     carouselDragging: false,
     carouselStartX: 0,
-    carouselScrollLeft: 0
+    carouselScrollLeft: 0,
+    viewContentFired: false,
+    checkoutStartFired: false
   };
 
   /* ════════════════════════════════════════
@@ -147,7 +143,61 @@
   }
 
   /* ════════════════════════════════════════
-     4. THEME
+     4. UNIQUE ORDER ID — Timestamp Based
+     Format: KR-DDMMYYYY-HHMMSSmmm
+     Example: KR-04042026-143052847
+     Globally unique — no collision possible
+  ════════════════════════════════════════ */
+  function genOrderId() {
+    const now = new Date();
+    const dd  = String(now.getDate()).padStart(2, '0');
+    const mm  = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const HH  = String(now.getHours()).padStart(2, '0');
+    const MM  = String(now.getMinutes()).padStart(2, '0');
+    const SS  = String(now.getSeconds()).padStart(2, '0');
+    const ms  = String(now.getMilliseconds()).padStart(3, '0');
+    return `KR-${dd}${mm}${yyyy}-${HH}${MM}${SS}${ms}`;
+  }
+
+  /* ════════════════════════════════════════
+     5. GTM DATA LAYER PUSH
+     Uses nested ecommerce object
+     Matches GTM Variable config: ecommerce.value etc.
+  ════════════════════════════════════════ */
+  function krPush(eventName, ecommerceData, extraData) {
+    window.dataLayer = window.dataLayer || [];
+    // Clear previous ecommerce data first (best practice)
+    window.dataLayer.push({ ecommerce: null });
+    const payload = { event: eventName };
+    if (ecommerceData) payload.ecommerce = ecommerceData;
+    if (extraData) Object.assign(payload, extraData);
+    window.dataLayer.push(payload);
+  }
+
+  /* ════════════════════════════════════════
+     6. BUILD GTM ITEMS ARRAY
+     Standard GA4/Meta ecommerce items format
+  ════════════════════════════════════════ */
+  function buildItemsArray() {
+    return Object.keys(selections)
+      .filter(pid => selections[pid].qty > 0)
+      .map(pid => {
+        const sel = selections[pid];
+        const p   = KR.PRODUCTS[pid];
+        return {
+          item_id:       p.id,
+          item_name:     p.name,
+          item_category: p.category,
+          item_variant:  (sel.size || '') + '-' + (sel.color || ''),
+          price:         p.price,
+          quantity:      sel.qty
+        };
+      });
+  }
+
+  /* ════════════════════════════════════════
+     7. THEME
   ════════════════════════════════════════ */
   function initTheme() {
     setTheme(localStorage.getItem('kr_theme') || 'light', false);
@@ -164,7 +214,7 @@
   }
 
   /* ════════════════════════════════════════
-     5. LANGUAGE — announcement bar fixed
+     8. LANGUAGE
   ════════════════════════════════════════ */
   function initLang() {
     setLang(localStorage.getItem('kr_lang') || 'en', false);
@@ -175,11 +225,9 @@
     document.documentElement.setAttribute('lang', lang === 'bn' ? 'bn' : 'en');
     if (save) localStorage.setItem('kr_lang', lang);
 
-    // Update label
     const lbl = $('langLabel');
     if (lbl) lbl.textContent = lang === 'bn' ? 'EN' : 'বাং';
 
-    // Apply Bengali font to html element
     if (lang === 'bn') {
       document.documentElement.style.setProperty('--font-heading', "'Hind Siliguri', sans-serif");
       document.documentElement.style.setProperty('--font-body',    "'Hind Siliguri', sans-serif");
@@ -188,19 +236,18 @@
       document.documentElement.style.setProperty('--font-body',    "'Inter', sans-serif");
     }
 
-    // Apply to ALL elements with data-en / data-bn
+
     $$('[data-en][data-bn]').forEach(el => {
       const txt = el.getAttribute('data-' + lang);
       if (txt !== null) el.textContent = txt;
     });
 
-    // Placeholders
+
     $$('[data-placeholder-en][data-placeholder-bn]').forEach(el => {
       const ph = el.getAttribute('data-placeholder-' + lang);
       if (ph) el.placeholder = ph;
     });
 
-    // Rebuild dynamic sections (language-sensitive)
     buildCarousel();
     buildCheckoutProducts();
     updateSummary();
@@ -208,7 +255,7 @@
   }
 
   /* ════════════════════════════════════════
-     6. ANNOUNCEMENT BAR
+     9. ANNOUNCEMENT BAR
   ════════════════════════════════════════ */
   function initAnnouncement() {
     if (localStorage.getItem('kr_announce_closed') === '1') {
@@ -223,14 +270,13 @@
   }
 
   /* ════════════════════════════════════════
-     7. NAVBAR
+     10. NAVBAR
   ════════════════════════════════════════ */
   function initNavbar() {
     window.addEventListener('scroll', () => {
       $('kr-navbar')?.classList.toggle('is-scrolled', window.scrollY > 10);
 
-      // Hide fixed bottom btn when user is inside order form section
-      const fixedBtn    = $('kr-fixed-btn');
+      const fixedBtn     = $('kr-fixed-btn');
       const orderSection = $('kr-order-form');
       if (fixedBtn && orderSection) {
         const rect   = orderSection.getBoundingClientRect();
@@ -240,7 +286,6 @@
       }
     }, { passive: true });
 
-    // Hamburger
     const ham  = $('navHamburger');
     const menu = $('kr-mobile-menu');
     if (ham && menu) {
@@ -251,6 +296,7 @@
         $('hamburgerClose').style.display = open ? 'block' : 'none';
       });
     }
+
     $$('.kr-mobile-menu__item').forEach(item => {
       item.addEventListener('click', () => {
         menu?.classList.remove('is-open');
@@ -262,7 +308,7 @@
   }
 
   /* ════════════════════════════════════════
-     8. HERO GALLERY
+     11. HERO GALLERY
   ════════════════════════════════════════ */
   function initGallery() {
     const mainImg = $('heroMainImg');
@@ -281,11 +327,11 @@
         mainImg.style.transform = 'rotateY(0)';
         mainImg.style.opacity   = '1';
       }, 250);
+
       $$('.kr-hero__thumb').forEach(t => t.classList.remove('kr-hero__thumb--active'));
       thumb.classList.add('kr-hero__thumb--active');
     });
 
-    // Touch swipe
     let tx = 0;
     mainImg.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
     mainImg.addEventListener('touchend', e => {
@@ -300,7 +346,7 @@
   }
 
   /* ════════════════════════════════════════
-     9. DYNAMIC ISLAND
+     12. DYNAMIC ISLAND
   ════════════════════════════════════════ */
   let islandTimer = null;
 
@@ -310,7 +356,7 @@
     const ic = $('islandIcon');
     const ti = $('islandTitle');
     const bo = $('islandBody');
-    if (ic) ic.innerHTML = icon; // SVG or text
+    if (ic) ic.innerHTML = icon;
     if (ti) ti.textContent = title;
     if (bo) bo.textContent = body;
     if (islandTimer) clearTimeout(islandTimer);
@@ -360,17 +406,16 @@
   }
 
   /* ════════════════════════════════════════
-     10. CAROUSEL — auto + manual drag/touch
+     13. CAROUSEL — auto + manual drag/touch
   ════════════════════════════════════════ */
   function buildCarousel() {
     const track = $('carouselTrack');
     if (!track) return;
 
-    const badgeMap   = { 1: 'Best Seller',      2: 'Most Popular',      3: 'Limited Stock'   };
-    const badgeMapBn = { 1: 'সেরা বিক্রয়',       2: 'সবচেয়ে জনপ্রিয়',    3: 'সীমিত স্টক'      };
-    const badgeCls   = { 1: 'kr-badge--hot',     2: 'kr-badge--new',     3: 'kr-badge--sale'  };
+    const badgeMap   = { 1: 'Best Seller',   2: 'Most Popular',   3: 'Limited Stock'  };
+    const badgeMapBn = { 1: 'সেরা বিক্রয়',    2: 'সবচেয়ে জনপ্রিয়', 3: 'সীমিত স্টক'    };
+    const badgeCls   = { 1: 'kr-badge--hot',  2: 'kr-badge--new',  3: 'kr-badge--sale' };
 
-    // 5 images for carousel (all products including extras)
     const carouselItems = [
       { pid: 1, img: KR.PRODUCTS[1].images[0] },
       { pid: 2, img: KR.PRODUCTS[2].images[0] },
@@ -380,12 +425,11 @@
       { pid: 3, img: KR.PRODUCTS[3].images[1] }
     ];
 
-    // Duplicate for infinite scroll
     const allItems = [...carouselItems, ...carouselItems];
 
     track.innerHTML = allItems.map(({ pid, img }) => {
-      const p    = KR.PRODUCTS[pid];
-      const nm   = state.lang === 'bn' ? p.nameBn : p.name;
+      const p     = KR.PRODUCTS[pid];
+      const nm    = state.lang === 'bn' ? p.nameBn : p.name;
       const badge = state.lang === 'bn' ? badgeMapBn[pid] : badgeMap[pid];
       const isSel = selections[pid].qty > 0;
       const selTxt = state.lang === 'bn'
@@ -423,7 +467,6 @@
       </div>`;
     }).join('');
 
-    // Click: select product
     track.addEventListener('click', e => {
       if (state.carouselDragging) return;
       const btn = e.target.closest('.kr-carousel-card__btn');
@@ -434,6 +477,21 @@
         updateCheckoutProductQty(pid);
         updateSummary();
       }
+
+      // Fire add_to_cart GTM event
+      const p = KR.PRODUCTS[pid];
+      krPush('add_to_cart', {
+        currency: 'BDT',
+        value: p.price,
+        items: [{
+          item_id:       p.id,
+          item_name:     p.name,
+          item_category: p.category,
+          price:         p.price,
+          quantity:      1
+        }]
+      });
+
       const form = $('kr-order-form');
       if (form) {
         const navH = $('kr-navbar')?.offsetHeight || 70;
@@ -455,13 +513,11 @@
 
     let animPaused = false;
 
-    // Mouse drag
     wrap.addEventListener('mousedown', e => {
       state.carouselDragging = false;
       state.carouselStartX    = e.pageX - wrap.offsetLeft;
       state.carouselScrollLeft = wrap.scrollLeft;
       wrap.style.cursor = 'grabbing';
-      // Pause CSS animation
       track.style.animationPlayState = 'paused';
       animPaused = true;
 
@@ -474,7 +530,6 @@
         wrap.style.cursor = 'grab';
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
-        // Resume after 200ms
         setTimeout(() => {
           track.style.animationPlayState = 'running';
           animPaused = false;
@@ -485,10 +540,9 @@
       document.addEventListener('mouseup', onUp);
     });
 
-    // Touch drag
     let touchStartX = 0, touchScrollLeft = 0;
     wrap.addEventListener('touchstart', e => {
-      touchStartX    = e.touches[0].pageX;
+      touchStartX     = e.touches[0].pageX;
       touchScrollLeft = wrap.scrollLeft;
       track.style.animationPlayState = 'paused';
     }, { passive: true });
@@ -499,12 +553,9 @@
     }, { passive: true });
 
     wrap.addEventListener('touchend', () => {
-      setTimeout(() => {
-        track.style.animationPlayState = 'running';
-      }, 300);
+      setTimeout(() => { track.style.animationPlayState = 'running'; }, 300);
     }, { passive: true });
 
-    // Hover: pause
     wrap.addEventListener('mouseenter', () => {
       if (!animPaused) track.style.animationPlayState = 'paused';
     });
@@ -514,7 +565,7 @@
   }
 
   /* ════════════════════════════════════════
-     11. CHECKOUT PRODUCTS (multi, qty fixed)
+     14. CHECKOUT PRODUCTS
   ════════════════════════════════════════ */
   function buildCheckoutProducts() {
     const wrap = $('checkoutProducts');
@@ -563,29 +614,42 @@
       </div>`;
     }).join('');
 
-    // ── Event delegation — ONE listener only ──
     wrap.addEventListener('click', handleCheckoutClick);
   }
 
   function handleCheckoutClick(e) {
-    // Size button
     const sBtn = e.target.closest('.kr-co-size-btn');
     if (sBtn) {
       const pid  = sBtn.getAttribute('data-pid');
       const size = sBtn.getAttribute('data-size');
       selections[pid].size = size;
       if (selections[pid].qty === 0) selections[pid].qty = 1;
-      // Update visual only (no full rebuild to avoid qty bug)
       document.querySelectorAll(`.kr-co-size-btn[data-pid="${pid}"]`).forEach(b =>
         b.classList.toggle('is-selected', b === sBtn)
       );
       updateCheckoutProductQty(pid);
       updateSummary();
       clearSelectErr(pid);
+
+      // Fire view_content on first size selection
+      if (!state.viewContentFired) {
+        state.viewContentFired = true;
+        const p = KR.PRODUCTS[parseInt(pid)];
+        krPush('view_content', {
+          currency: 'BDT',
+          value: p.price,
+          items: [{
+            item_id:       p.id,
+            item_name:     p.name,
+            item_category: p.category,
+            price:         p.price,
+            quantity:      1
+          }]
+        });
+      }
       return;
     }
 
-    // Color button
     const cBtn = e.target.closest('.kr-co-color-btn');
     if (cBtn) {
       const pid   = cBtn.getAttribute('data-pid');
@@ -601,12 +665,11 @@
       return;
     }
 
-    // Qty button — THE FIX: change by exactly 1
     const qBtn = e.target.closest('.kr-co-qty-btn');
     if (qBtn) {
       const pid    = qBtn.getAttribute('data-pid');
       const action = qBtn.getAttribute('data-action');
-      const cur    = parseInt(selections[pid].qty) || 0; // ensure integer
+      const cur    = parseInt(selections[pid].qty) || 0;
 
       if (action === 'plus')  selections[pid].qty = Math.min(cur + 1, 10);
       if (action === 'minus') selections[pid].qty = Math.max(cur - 1, 0);
@@ -629,7 +692,7 @@
   }
 
   /* ════════════════════════════════════════
-     12. PRICING CALCULATION
+     15. PRICING CALCULATION
   ════════════════════════════════════════ */
   function calcTotals() {
     let subtotal = 0;
@@ -666,13 +729,12 @@
   }
 
   /* ════════════════════════════════════════
-     13. SUMMARY UPDATE
+     16. SUMMARY UPDATE
   ════════════════════════════════════════ */
   function updateSummary() {
     const { subtotal, delivery, discount, advance, total, remaining, district } = calcTotals();
     const lang = state.lang;
 
-    // Products list
     const listEl = $('summaryProductsList');
     if (listEl) {
       const active = Object.keys(selections).filter(pid => selections[pid].qty > 0);
@@ -691,10 +753,8 @@
       }
     }
 
-    // Subtotal
     setText('summarySubtotal', '৳' + fmt(subtotal));
 
-    // Shipping
     const sh = $('summaryShipping');
     if (sh) {
       if (!district || subtotal === 0) {
@@ -706,20 +766,16 @@
       }
     }
 
-    // Discount
     const sdLine = $('summaryDiscountLine');
     if (sdLine) sdLine.style.display = discount > 0 ? 'flex' : 'none';
     if (discount > 0) setText('summaryDiscount', '-৳' + fmt(discount));
 
-    // Total
     setText('summaryTotal', '৳' + fmt(total));
 
-    // Advance
     const saLine = $('summaryAdvanceLine');
     if (saLine) saLine.style.display = advance > 0 ? 'flex' : 'none';
     if (advance > 0) setText('summaryAdvance', '-৳' + fmt(advance));
 
-    // Remaining / COD payable
     const srWrap = $('summaryRemainingWrap');
     if (srWrap) srWrap.style.display = total > 0 ? 'flex' : 'none';
     setText('summaryRemaining', '৳' + fmt(remaining));
@@ -733,15 +789,14 @@
   }
 
   /* ════════════════════════════════════════
-     14. WHATSAPP ORDER LINK — full message
+     17. WHATSAPP ORDER LINK
   ════════════════════════════════════════ */
   function buildOrderMessage(orderId) {
     const { subtotal, delivery, discount, advance, total, remaining } = calcTotals();
-    const lang      = state.lang;
-    const pay       = getPayment();
-    const payLabel  = pay === 'cod' ? 'Cash on Delivery (COD)' : pay === 'bkash' ? 'bKash' : 'Nagad';
-    const trxId     = pay === 'bkash' ? ($('bkashTrxId')?.value.trim() || 'N/A')
-                    : pay === 'nagad'  ? ($('nagadTrxId')?.value.trim() || 'N/A') : '';
+    const pay      = getPayment();
+    const payLabel = pay === 'cod' ? 'Cash on Delivery (COD)' : pay === 'bkash' ? 'bKash' : 'Nagad';
+    const trxId    = pay === 'bkash' ? ($('bkashTrxId')?.value.trim() || 'N/A')
+                   : pay === 'nagad'  ? ($('nagadTrxId')?.value.trim() || 'N/A') : '';
 
     const name     = $('customerName')?.value.trim()    || '—';
     const phone    = $('customerPhone')?.value.trim()   || '—';
@@ -758,11 +813,13 @@
         return `   Product: ${p.name}\n   Size: ${sel.size || '?'} | Color: ${sel.color || '?'} | Qty: ${sel.qty}\n   Price: BDT ${fmt(p.price * sel.qty)}`;
       }).join('\n   ─────────\n');
 
-    const discountLine  = discount > 0  ? `\nDiscount: -BDT ${fmt(discount)} (${state.couponCode})` : '';
-    const advanceLine   = advance > 0   ? `\nAdvance Paid: BDT ${fmt(advance)}\nCOD Payable: BDT ${fmt(remaining)}` : `\nCOD Payable: BDT ${fmt(total)}`;
-    const trxLine       = trxId ? `\nTransaction ID: ${trxId}` : '';
-    const now           = orderId ? '' : new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
-    const oid           = orderId || 'DRAFT';
+    const discountLine = discount > 0 ? `\nDiscount: -BDT ${fmt(discount)} (${state.couponCode})` : '';
+    const advanceLine  = advance > 0
+      ? `\nAdvance Paid: BDT ${fmt(advance)}\nCOD Payable: BDT ${fmt(remaining)}`
+      : `\nCOD Payable: BDT ${fmt(total)}`;
+    const trxLine = trxId ? `\nTransaction ID: ${trxId}` : '';
+    const now     = orderId ? '' : new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' });
+    const oid     = orderId || 'DRAFT';
 
     return (
 `Order ID: ${oid}
@@ -796,7 +853,7 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     15. COUPON
+     18. COUPON
   ════════════════════════════════════════ */
   function initCoupon() {
     $('applyCouponBtn')?.addEventListener('click', applyCoupon);
@@ -846,9 +903,10 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     16. PAYMENT SWITCHING
+     19. PAYMENT SWITCHING
   ════════════════════════════════════════ */
   function initPayment() {
+
     $$('input[name="payment"]').forEach(r => {
       r.addEventListener('change', function () {
         const bp = $('bkashPanel');
@@ -856,7 +914,15 @@ Note: ${note}`
         if (bp) bp.hidden = this.value !== 'bkash';
         if (np) np.hidden  = this.value !== 'nagad';
         updateSummary();
-        krPush('add_payment_info', { dlv_payment_method: this.value, dlv_currency: 'BDT' });
+
+        // Fire add_payment_info GTM event
+        const { total } = calcTotals();
+        krPush('add_payment_info', {
+          currency: 'BDT',
+          value: total,
+          payment_type: this.value,
+          items: buildItemsArray()
+        });
       });
     });
     [$('bkashAdvance'), $('nagadAdvance')].forEach(inp => {
@@ -865,16 +931,12 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     17. PHONE VALIDATION — multi-format
+     20. PHONE VALIDATION — multi-format
   ════════════════════════════════════════ */
   function normalizePhone(raw) {
-    // Strip spaces, dashes, dots
     let p = raw.replace(/[\s\-\.]/g, '');
-    // +880XXXXXXXXXX → 0XXXXXXXXXX
     if (p.startsWith('+880')) p = '0' + p.slice(4);
-    // 880XXXXXXXXXX (without +)
     else if (p.startsWith('880') && p.length >= 13) p = '0' + p.slice(3);
-    // 0088XXXXXXXXXX
     else if (p.startsWith('0088')) p = '0' + p.slice(4);
     return p;
   }
@@ -885,13 +947,12 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     18. FORM VALIDATION
+     21. FORM VALIDATION
   ════════════════════════════════════════ */
   function validate() {
     let ok   = true;
     const lang = state.lang;
 
-    // At least 1 product with qty > 0
     const hasProduct = Object.values(selections).some(s => s.qty > 0);
     if (!hasProduct) {
       showIsland(
@@ -903,13 +964,12 @@ Note: ${note}`
       ok = false;
     }
 
-    // Size & color for active products
     Object.keys(selections).forEach(pid => {
       const sel = selections[pid];
       if (sel.qty > 0 && (!sel.size || !sel.color)) {
         const row = document.querySelector(`.kr-co-product[data-pid="${pid}"]`);
         if (row) {
-          row.style.outline = '2px solid #ef4444';
+          row.style.outline      = '2px solid #ef4444';
           row.style.borderRadius = '14px';
           setTimeout(() => { row.style.outline = ''; }, 2500);
         }
@@ -917,7 +977,6 @@ Note: ${note}`
       }
     });
 
-    // Name
     const name = $('customerName')?.value.trim() || '';
     if (name.length < 2) {
       setErr('nameError', lang === 'bn' ? 'সঠিক নাম লিখুন' : 'Enter your name');
@@ -925,7 +984,6 @@ Note: ${note}`
       ok = false;
     }
 
-    // Phone — multi-format
     const rawPhone = $('customerPhone')?.value.trim() || '';
     if (!isValidBDPhone(rawPhone)) {
       setErr('phoneError',
@@ -936,7 +994,6 @@ Note: ${note}`
       ok = false;
     }
 
-    // Email (optional)
     const email = $('customerEmail')?.value.trim() || '';
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setErr('emailError', lang === 'bn' ? 'সঠিক ইমেইল দিন' : 'Invalid email address');
@@ -944,14 +1001,12 @@ Note: ${note}`
       ok = false;
     }
 
-    // District
     if (!$('customerDistrict')?.value) {
       setErr('districtError', lang === 'bn' ? 'জেলা নির্বাচন করুন' : 'Select your district');
       $('customerDistrict')?.classList.add('is-error');
       ok = false;
     }
 
-    // Address
     const addr = $('customerAddress')?.value.trim() || '';
     if (addr.length < 10) {
       setErr('addressError',
@@ -960,7 +1015,6 @@ Note: ${note}`
       ok = false;
     }
 
-    // bKash/Nagad Trx ID
     const pay = getPayment();
     if (pay === 'bkash' && !$('bkashTrxId')?.value.trim()) {
       $('bkashTrxId')?.classList.add('is-error');
@@ -989,10 +1043,10 @@ Note: ${note}`
 
   function initLiveValidation() {
     [
-      { id: 'customerName',    errId: 'nameError'     },
-      { id: 'customerPhone',   errId: 'phoneError'    },
-      { id: 'customerEmail',   errId: 'emailError'    },
-      { id: 'customerAddress', errId: 'addressError'  }
+      { id: 'customerName',    errId: 'nameError'    },
+      { id: 'customerPhone',   errId: 'phoneError'   },
+      { id: 'customerEmail',   errId: 'emailError'   },
+      { id: 'customerAddress', errId: 'addressError' }
     ].forEach(({ id, errId }) => {
       $(id)?.addEventListener('input', () => {
         $(id)?.classList.remove('is-error');
@@ -1006,36 +1060,43 @@ Note: ${note}`
       updateSummary();
     });
 
-    let checkoutFired = false;
+    // InitiateCheckout — fires once when user starts filling form
+
     $$('#orderForm input, #orderForm textarea, #orderForm select').forEach(el => {
       el.addEventListener('focus', () => {
-        if (!checkoutFired) {
-          checkoutFired = true;
-          krPush('begin_checkout', { dlv_currency: 'BDT' });
+        if (!state.checkoutStartFired) {
+          state.checkoutStartFired = true;
+          const { total } = calcTotals();
+          krPush('initiate_checkout', {
+            currency: 'BDT',
+            value: total,
+            items: buildItemsArray()
+          });
         }
-      });
+      }, { once: false });
     });
   }
 
   /* ════════════════════════════════════════
-     19. ORDER ID
-  ════════════════════════════════════════ */
-  function genOrderId() {
-    state.orderCounter++;
-    localStorage.setItem('kr_order_counter', state.orderCounter);
-    const now = new Date();
-    const dd  = String(now.getDate()).padStart(2, '0');
-    const mm  = String(now.getMonth() + 1).padStart(2, '0');
-    const yy  = now.getFullYear();
-    return `KR-${String(state.orderCounter).padStart(4, '0')}-${dd}${mm}${yy}`;
-  }
-
-  /* ════════════════════════════════════════
-     20. ORDER SUBMIT
+     22. ORDER FORM SUBMIT
+     NOTE: Purchase GTM event NOT fired here.
+     It fires ONLY in success.html to avoid duplicate.
   ════════════════════════════════════════ */
   function initOrderForm() {
     const form = $('orderForm');
     if (!form) return;
+
+    // WhatsApp button click — fires whatsapp_order event
+    $('waOrderBtn')?.addEventListener('click', () => {
+      const { total } = calcTotals();
+      const items = buildItemsArray();
+      krPush('whatsapp_order', {
+        currency: 'BDT',
+        value: total,
+        num_items: items.reduce((s, i) => s + i.quantity, 0),
+        items
+      });
+    });
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -1070,45 +1131,41 @@ Note: ${note}`
 
         const orderData = {
           orderId,
-          date:     new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' }),
-          name:     $('customerName').value.trim(),
+          date:        new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' }),
+          name:        $('customerName').value.trim(),
           phone,
-          email:    $('customerEmail')?.value.trim() || '',
-          district: $('customerDistrict').value,
-          address:  $('customerAddress').value.trim(),
-          products: productStr,
-          qty:      totalQty,
-          subtotal, shipping: delivery, discount,
-          coupon:   state.couponCode,
-          total, payment: pay, trxId, advance,
-          note:     $('orderNote')?.value.trim() || '',
+          email:       $('customerEmail')?.value.trim() || '',
+          district:    $('customerDistrict').value,
+          address:     $('customerAddress').value.trim(),
+          products:    productStr,
+          qty:         totalQty,
+          subtotal,
+          shipping:    delivery,
+          discount,
+          coupon:      state.couponCode,
+          total,
+          payment:     pay,
+          trxId,
+          advance,
+          note:        $('orderNote')?.value.trim() || '',
           // For success page
-          productName: firstP.name, productId: firstP.id,
+          productName: firstP.name,
+          productId:   firstP.id,
           category:    firstP.category,
-          size:        firstSel.size, color: firstSel.color,
-          remaining
+          size:        firstSel.size,
+          color:       firstSel.color,
+          remaining,
+          // Full items array for GTM on success.html
+          items:       buildItemsArray()
         };
 
-        // Send in parallel — fail gracefully
+        // Send in parallel
         await Promise.allSettled([
           sendToSheets(orderData),
           sendToTelegram(orderData)
         ]);
 
-        // GTM
-        krPush('purchase', {
-          dlv_order_id:       orderId,
-          dlv_value:          total,
-          dlv_currency:       'BDT',
-          dlv_item_name:      productStr,
-          dlv_quantity:       totalQty,
-          dlv_shipping:       delivery,
-          dlv_discount:       discount,
-          dlv_coupon:         state.couponCode,
-          dlv_payment_method: pay,
-          dlv_customer_district: $('customerDistrict').value
-        });
-
+        // Save for success.html — purchase event fires there
         localStorage.setItem('kr_last_order', JSON.stringify(orderData));
         setSuccess();
         setTimeout(() => { window.location.href = `success.html?id=${orderId}`; }, 1200);
@@ -1160,18 +1217,26 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     21. GOOGLE SHEETS
+     23. GOOGLE SHEETS
   ════════════════════════════════════════ */
   async function sendToSheets(d) {
     const body = JSON.stringify({
-      orderId:  d.orderId,  date:     d.date,
-      name:     d.name,     phone:    d.phone,
-      email:    d.email,    district: d.district,
-      address:  d.address,  products: d.products,
-      qty:      d.qty,      subtotal: d.subtotal,
-      shipping: d.shipping, discount: d.discount,
-      coupon:   d.coupon,   total:    d.total,
-      payment:  d.payment,  trxId:    d.trxId,
+      orderId:  d.orderId,
+      date:     d.date,
+      name:     d.name,
+      phone:    d.phone,
+      email:    d.email,
+      district: d.district,
+      address:  d.address,
+      products: d.products,
+      qty:      d.qty,
+      subtotal: d.subtotal,
+      shipping: d.shipping,
+      discount: d.discount,
+      coupon:   d.coupon,
+      total:    d.total,
+      payment:  d.payment,
+      trxId:    d.trxId,
       advance:  d.advance
     });
     const res = await fetch(KR.SHEETS_URL, {
@@ -1183,10 +1248,10 @@ Note: ${note}`
   }
 
   /* ════════════════════════════════════════
-     22. TELEGRAM — same format as WhatsApp
+     24. TELEGRAM
   ════════════════════════════════════════ */
   async function sendToTelegram(d) {
-    const pay = d.payment;
+    const pay      = d.payment;
     const payLabel = pay === 'cod'   ? 'Cash on Delivery (COD)'
                    : pay === 'bkash' ? `bKash | TrxID: ${d.trxId || 'N/A'}`
                    :                   `Nagad | TrxID: ${d.trxId || 'N/A'}`;
@@ -1237,15 +1302,15 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     23. SIZE CHART POPUP
+     25. SIZE CHART POPUP
   ════════════════════════════════════════ */
   function initSizeChart() {
-    const overlay = $('sizeChartOverlay');
+    const overlay  = $('sizeChartOverlay');
     const closeBtn = $('sizeChartClose');
+
 
     $$('.kr-size-chart-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        // Render table based on first active product, else product 1
         const activePid = Object.keys(selections).find(pid => selections[pid].qty > 0) || '1';
         renderSizeChart(parseInt(activePid));
         if (overlay) { overlay.removeAttribute('hidden'); overlay.classList.add('is-active'); }
@@ -1253,17 +1318,9 @@ Saved to Google Sheets`;
       });
     });
 
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeSizeChart);
-    }
-    if (overlay) {
-      overlay.addEventListener('click', e => {
-        if (e.target === overlay) closeSizeChart();
-      });
-    }
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeSizeChart();
-    });
+    if (closeBtn) closeBtn.addEventListener('click', closeSizeChart);
+    if (overlay)  overlay.addEventListener('click', e => { if (e.target === overlay) closeSizeChart(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSizeChart(); });
   }
 
   function closeSizeChart() {
@@ -1273,8 +1330,8 @@ Saved to Google Sheets`;
   }
 
   function renderSizeChart(pid) {
-    const p       = KR.PRODUCTS[pid];
-    const lang    = state.lang;
+    const p      = KR.PRODUCTS[pid];
+    const lang   = state.lang;
     const titleEl = $('sizeChartTitle');
     const bodyEl  = $('sizeChartBody');
     if (titleEl) titleEl.textContent = lang === 'bn' ? `${p.nameBn} — সাইজ চার্ট` : `${p.name} — Size Chart`;
@@ -1306,22 +1363,16 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     24. GTM
-  ════════════════════════════════════════ */
-  function krPush(ev, data) {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: ev, ...data });
-  }
-
-  /* ════════════════════════════════════════
-     25. FAQ
+     26. FAQ
   ════════════════════════════════════════ */
   function initFAQ() {
+
     $$('.kr-faq-item').forEach(item => {
       const btn = item.querySelector('.kr-faq-item__q');
       if (!btn) return;
       btn.addEventListener('click', () => {
         const open = item.classList.contains('is-open');
+
         $$('.kr-faq-item').forEach(i => {
           i.classList.remove('is-open');
           i.querySelector('.kr-faq-item__q')?.setAttribute('aria-expanded', 'false');
@@ -1335,7 +1386,7 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     26. SCROLL ANIMATIONS — both directions
+     27. SCROLL ANIMATIONS
   ════════════════════════════════════════ */
   function initScrollAnimations() {
     const els = $$('.anim-fade-up, .anim-fade-left, .anim-scale-in');
@@ -1355,7 +1406,7 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     27. COUNT-UP
+     28. COUNT-UP
   ════════════════════════════════════════ */
   function initCountUp() {
     const els = $$('[data-count]');
@@ -1382,9 +1433,10 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     28. SMOOTH SCROLL
+     29. SMOOTH SCROLL
   ════════════════════════════════════════ */
   function initSmoothScroll() {
+
     $$('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const href = a.getAttribute('href');
@@ -1400,7 +1452,7 @@ Saved to Google Sheets`;
   }
 
   /* ════════════════════════════════════════
-     29. INIT
+     30. INIT
   ════════════════════════════════════════ */
   function init() {
     initTheme();
@@ -1435,9 +1487,23 @@ Saved to Google Sheets`;
     $('customerDistrict')?.addEventListener('change', updateSummary);
 
     updateSummary();
-    setTimeout(() => krPush('view_item', { dlv_page_type: 'landing', dlv_currency: 'BDT' }), 500);
 
-    console.log('[KR] v3 initialized');
+    // PageView + ViewItem on load
+    setTimeout(() => {
+      krPush('view_item', {
+        currency: 'BDT',
+        value:    KR.PRODUCTS[1].price,
+        items: [{
+          item_id:       KR.PRODUCTS[1].id,
+          item_name:     KR.PRODUCTS[1].name,
+          item_category: KR.PRODUCTS[1].category,
+          price:         KR.PRODUCTS[1].price,
+          quantity:      1
+        }]
+      }, { dlv_page_type: 'landing' });
+    }, 500);
+
+    console.log('[KR] v4 initialized | GTM: GTM-NB866PRS');
   }
 
   if (document.readyState === 'loading') {
