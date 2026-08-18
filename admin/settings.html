@@ -1,0 +1,65 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Settings — KORA ROYAL</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"><script src="admin-core.js"></script><link rel="stylesheet" href="settings.css"></head><body><div class="kr-admin-layout"><aside id="krAdminSidebar"></aside><div id="krSidebarOverlay" class="kr-sidebar-overlay"></div><div class="kr-admin-right"><header class="kr-admin-topbar"><button id="krMobileMenuBtn" class="kr-mobile-menu-btn"></button><div class="kr-topbar-title">Settings</div></header><main class="kr-admin-main"><div class="kr-settings-grid"><section class="kr-card"><div class="kr-card-header"><div class="kr-card-title">System Health</div></div><div class="kr-card-body"><div class="kr-setting-row"><span>Worker</span><b id="setWorker">Checking…</b></div><div class="kr-setting-row"><span>D1 Commerce</span><b id="setD1">Checking…</b></div><div class="kr-setting-row"><span>KV Reviews/Legacy</span><b>Bound as KR_ORDERS</b></div><button id="setPing" class="kr-btn kr-btn-ghost">Run health check</button></div></section><section class="kr-card"><div class="kr-card-header"><div class="kr-card-title">Telegram Test</div></div><div class="kr-card-body"><input id="setTelegramText" class="kr-input" value="🧪 KORA ROYAL Admin test"><button id="setTelegramSend" class="kr-btn kr-btn-primary">Send test</button><div id="setTelegramResult"></div></div></section><section class="kr-card"><div class="kr-card-header"><div class="kr-card-title">Customer Request Windows</div></div><div class="kr-card-body"><label>Return days<input id="setReturnDays" class="kr-input" type="number" min="0" max="90"></label><label>Refund days<input id="setRefundDays" class="kr-input" type="number" min="0" max="90"></label><label>Exchange days<input id="setExchangeDays" class="kr-input" type="number" min="0" max="90"></label><button id="setRequestSave" class="kr-btn kr-btn-primary">Save request settings</button></div></section><section class="kr-card"><div class="kr-card-header"><div class="kr-card-title">Admin Preferences</div></div><div class="kr-card-body"><label class="kr-setting-row"><span>Dark mode</span><input id="setDark" type="checkbox"></label><label class="kr-setting-row"><span>Notification sound preference</span><input id="setSound" type="checkbox"></label><label class="kr-setting-row"><span>Auto refresh preference</span><input id="setRefresh" type="checkbox"></label></div></section><section class="kr-card" id="krPathaoConfigCard">
+     <div class="kr-card-header">
+       <div class="kr-card-title">Pathao Courier Integration</div>
+     </div>
+     <div class="kr-card-body">
+       <label class="kr-setting-row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+         <span>Enable Pathao Integration</span>
+         <input id="setPathaoEnabled" type="checkbox" style="width:18px;height:18px;">
+       </label>
+       <label class="kr-setting-row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+         <span>Auto Pathao Booking
+           <small style="display:block;font-weight:400;color:var(--text-muted);font-size:0.72rem;margin-top:2px;">নতুন ওয়েব অর্ডার কনফার্ম হলে আপনা-আপনি Pathao-তে পাঠাবে (অফ রাখলে Orders পেজ থেকে ম্যানুয়ালি পাঠাতে হবে)</small>
+         </span>
+         <input id="setPathaoAutoBook" type="checkbox" style="width:18px;height:18px;flex-shrink:0;">
+       </label>
+       <label class="kr-setting-row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+         <span>Sandbox Mode</span>
+         <input id="setPathaoSandbox" type="checkbox" style="width:18px;height:18px;">
+       </label>
+       <div style="display:flex;gap:10px;margin-top:10px;">
+         <label style="flex:1;font-size:0.8125rem;font-weight:600;">Sender Name
+           <input id="setPathaoSenderName" class="kr-input" placeholder="Kora Royal" style="width:100%;margin-top:4px;">
+         </label>
+         <label style="flex:1;font-size:0.8125rem;font-weight:600;">Sender Phone
+           <input id="setPathaoSenderPhone" class="kr-input" placeholder="01935158745" style="width:100%;margin-top:4px;">
+         </label>
+       </div>
+       <div style="display:flex;gap:10px;margin-top:10px;">
+         <label style="flex:1;font-size:0.8125rem;font-weight:600;">Default Weight (KG)
+           <input id="setPathaoWeight" class="kr-input" type="number" step="0.1" value="0.5" style="width:100%;margin-top:4px;">
+         </label>
+         <label style="flex:1;font-size:0.8125rem;font-weight:600;">Item Type
+           <select id="setPathaoItemType" class="kr-input" style="width:100%;margin-top:4px;">
+             <option value="1">Document</option>
+             <option value="2" selected>Parcel</option>
+           </select>
+         </label>
+         <label style="flex:1;font-size:0.8125rem;font-weight:600;">Delivery Type
+           <select id="setPathaoDeliveryType" class="kr-input" style="width:100%;margin-top:4px;">
+             <option value="48" selected>Normal (48h)</option>
+             <option value="12">On-Demand (12h)</option>
+           </select>
+         </label>
+       </div>
+       <div style="margin-top:10px;">
+         <label style="font-size:0.8125rem;font-weight:600;">Pickup Store
+           <select id="setPathaoStore" class="kr-input" style="width:100%;margin-top:4px;">
+             <option value="">-- Sync stores first --</option>
+           </select>
+         </label>
+       </div>
+       <div style="margin-top:10px;">
+         <label style="font-size:0.8125rem;font-weight:600;">Webhook Signature Secret
+           <input id="setPathaoWebhookSecret" class="kr-input" type="password" placeholder="Custom secret token for webhook security" style="width:100%;margin-top:4px;">
+         </label>
+       </div>
+       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+         <button id="setPathaoSyncBtn" class="kr-btn kr-btn-ghost kr-btn-sm" type="button">Sync Stores</button>
+         <button id="setPathaoSaveBtn" class="kr-btn kr-btn-primary kr-btn-sm" type="button">Save Pathao Settings</button>
+       </div>
+       <div style="margin-top:10px;font-size:0.78rem;color:var(--text-muted);background:rgba(0,0,0,0.03);padding:8px 12px;border-radius:var(--radius-md);">
+         <b>Webhook URL:</b> <code id="setPathaoWebhookUrl" style="word-break:break-all;">https://kora-api.shakhawatyt77.workers.dev/api/pathao/webhook</code>
+       </div>
+     </div>
+   </section><section class="kr-card"><div class="kr-card-header"><div class="kr-card-title">Security</div></div><div class="kr-card-body"><p>Change <code>ADMIN_PASSWORD</code> and other secrets only from Cloudflare Worker → Settings → Variables and Secrets.</p><a class="kr-btn kr-btn-ghost" href="https://dash.cloudflare.com" target="_blank">Open Cloudflare</a></div></section></div></main></div></div><script src="admin-settings.js"></script></body></html>
