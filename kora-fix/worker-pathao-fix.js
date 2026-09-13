@@ -1,16 +1,22 @@
 /* ================================================================
-   KORA ROYAL — worker.js PATCH (ধাপ ২)
+   KORA ROYAL — worker.js প্যাচ (autoBookPathao + নতুন হেল্পার)
    ----------------------------------------------------------------
-   ⚠ এটা সম্পূর্ণ worker.js না — এটা বদলানোর ব্লক।
-     worker.js ২৮০KB, তাই পুরো ফাইল দেওয়া সম্ভব না।
+   ⚠ এটা সম্পূর্ণ worker.js না — এটা বদলানোর ব্লক (PATCH A + PATCH B)।
 
-   Cloudflare → Worker → Quick Edit → Ctrl+F করে নিচের অ্যাঙ্কর খুঁজে
-   পুরনো ব্লকটা মুছে এটা বসান।
+   ✅ সুপারিশ: হাতে না বসিয়ে অটো-প্যাচার চালান —
+        node apply-worker-patch.mjs worker.js worker.fixed.js
+      এটা আপনার অরিজিনাল worker.js পড়ে autoBookPathao() খুঁজে বের করে
+      (brace-matching, স্ট্রিং/টেমপ্লেট/রেগেক্স-সচেতন), নতুন কোড বসিয়ে
+      **সম্পূর্ণ ফাইল** worker.fixed.js লিখে দেয়। বাকি ৩৫০০+ লাইন
+      হুবহু অক্ষত থাকে — স্ক্রিপ্ট সেটার প্রমাণও দেখায়।
 
-   PATCH A : autoBookPathao()  — সম্পূর্ণ রিপ্লেসমেন্ট
-   PATCH B : নতুন হেল্পার (autoBookPathao-এর ঠিক উপরে বসান)
+   হাতে বসাতে চাইলে:
+     PATCH A : autoBookPathao()  — সম্পূর্ণ রিপ্লেসমেন্ট
+               অ্যাঙ্কর (Ctrl+F): async function autoBookPathao(env, order) {
+               শেষ অ্যাঙ্কর:      async function maybeAutoBookPathao(env, order) {
+     PATCH B : নতুন হেল্পার — PATCH A-এর ঠিক উপরে বসান
 
-   এই ফাইলটা node --check দিয়ে ভেরিফাই করা (নিচে CHANGELOG দেখুন)।
+   node --check দিয়ে ভেরিফাই করা।
    ================================================================ */
 
 
@@ -25,6 +31,7 @@
    নিশ্চিতকৃত (Pathao-র প্রকাশিত API আউটপুট):
      Dhaka=1  Cumilla=5  Cox's Bazar=11  Barisal=17  B. Baria=32
      Barguna=34 (শেষে স্পেস)  Bagerhat=52  Chuadanga=61  Bandarban=62 */
+// @KR-PATCH-B-START
 const KR_CITY_ALIASES = {
   'brahmanbaria': ['b. baria', 'brahmanbaria'],
   'barishal':     ['barisal', 'barishal'],
@@ -132,6 +139,7 @@ async function krGetPathaoCities(env) {
      maybeAutoBookPathao-তে হাত দেবেন না।
    ════════════════════════════════════════════════════════════════ */
 
+// @KR-PATCH-A-START
 async function autoBookPathao(env, order) {
   try {
     const enabledRow = await env.DB.prepare(`SELECT setting_value FROM app_settings WHERE setting_key='pathao_enabled'`).first();
@@ -292,3 +300,4 @@ async function autoBookPathao(env, order) {
     return { ok: false, error: e.message };
   }
 }
+// @KR-PATCH-A-END
