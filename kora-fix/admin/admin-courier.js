@@ -351,7 +351,34 @@
     if (b) b.onclick = saveAll;
   });
 
+  /* নতুন সেটিংস কী বসাতে POST /api/admin/setup-database।
+     নিরাপদ — worker-এ CREATE TABLE IF NOT EXISTS ও INSERT OR IGNORE চলে,
+     তাই পুরনো ডেটা মুছে না। ডেস্কটপ ছাড়া চালানোর জন্যই এই বাটন। */
+  async function runMigration() {
+    const btn = $('cMigrateBtn'), out = $('cTestResult');
+    if (!confirm('Courier migration চালাবেন?\n\nনতুন সেটিংস কী ও courier_shipments টেবিল তৈরি/আপডেট হবে।\nপুরনো ডেটা মুছবে না (CREATE TABLE IF NOT EXISTS + INSERT OR IGNORE)।')) return;
+    btn.disabled = true; btn.textContent = 'Running…';
+    try {
+      const r = await krAdminFetch('/api/admin/setup-database', {
+        method: 'POST',
+        body: JSON.stringify({ confirm: 'INITIALIZE_KORA_DATABASE' })
+      });
+      if (!r || !r.ok) throw new Error((r && (r.error || r.detail)) || 'Migration rejected');
+      out.className = 'kr-alert is-ok';
+      out.textContent = '✅ Migration সফল। এবার Save করে Courier সেটিংস আবার লোড করুন — নতুন ৭টা কী এখন worker-এ আছে।';
+      krToast('Migration successful', 'success');
+      await loadWorkerSettings();
+    } catch (e) {
+      out.className = 'kr-alert is-bad';
+      out.textContent = '❌ Migration ব্যর্থ: ' + (e.message || e);
+      krToast('Migration failed: ' + (e.message || e), 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Run DB Migration';
+    }
+  }
+
   $('cTestBtn').onclick = testConnection;
+  $('cMigrateBtn').onclick = runMigration;
 
   $('cSyncStores').onclick = async function () {
     this.disabled = true; this.textContent = 'Syncing…';
