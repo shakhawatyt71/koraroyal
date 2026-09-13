@@ -303,3 +303,97 @@ worker.js (~৩৫৯৪ লাইন) না। অথচ নিয়ম ছ�
       → apply-worker-patch.mjs দিয়ে সম্পূর্ণ ফাইল বানান।
 
 ================================================================
+
+================================================================
+  ধাপ ৪ — সম্পূর্ণ worker.js তৈরি (আসল ফাইল পেয়ে)
+================================================================
+
+আসল worker.js পাওয়া গেছে: ৩৫৯৩ লাইন, ২৮৬,৯০৮ বাইট, node --check পাস।
+
+  ইনপুট  : worker.txt        ৩৫৯৩ লাইন  ২৮৬,৯০৮ বাইট
+  আউটপুট : kora-fix/worker.js ৩৮২৯ লাইন  ২৯৬,১৮৬+ বাইট
+
+  অখণ্ডতা প্রমাণ (difflib SequenceMatcher):
+      অপরিবর্তিত ম্যাচ ......... ৩৫৪৫ লাইন হুবহু এক
+      বদলেছে/সরেছে ............ ৪৯ লাইন
+      export default / fetch / scheduled / 'UNKNOWN PATH' → ১টা করে, অক্ষত
+      ফাইলের শেষ ৩ লাইন ....... হুবহু এক
+
+  ৭টা hunk, সবগুলো ইচ্ছাকৃত:
+      @@ -186   seed: ৭টা নতুন সেটিংস কী
+      @@ -392   KR_DEFAULT_INSTRUCTION + KR_CITY_ALIASES + হেল্পার
+      @@ -400   autoBookPathao (নতুন)
+      @@ -457   autoBookPathao (বাকি)
+      @@ -990   webhook auth ফিক্স
+      @@ -1216  operations-settings GET whitelist
+      @@ -1238  operations-settings POST rows
+
+----------------------------------------------------------------
+  PATCH D — Courier প্যানেলের কন্ট্রোল এখন worker পড়ে
+----------------------------------------------------------------
+সমস্যা: প্যানেলের পছন্দ শুধু ব্রাউজারের localStorage-এ থাকত, তাই
+auto-booking অ্যাডমিনের সেটিংস পুরোপুরি উপেক্ষা করত। special_instruction
+ছিল হার্ডকোড `Auto-booked. Customer: ${cust.name}` — আপনার প্রি-সেট নোট নয়।
+
+৭টা নতুন কী, চার জায়গায় যুক্ত (seed / GET / POST / প্যানেল):
+    pathao_default_quantity        (ডিফল্ট 1)
+    pathao_amount_source           (cod_remaining | total_payable)
+    pathao_instruction_template    (𖹭 সহ, admin-core.js থেকে হুবহু নেওয়া)
+    pathao_item_desc_sku           (ডিফল্ট চালু)
+    pathao_item_desc_price         (ডিফল্ট চালু)
+    pathao_item_desc_qty           (ডিফল্ট চালু)
+    pathao_item_desc_fallback      (ডিফল্ট 'Clothing')
+
+worker-এ KR_DEFAULT_INSTRUCTION ধ্রুবক যোগ — migration না চললেও ডিফল্ট
+টেমপ্লেট কাজ করে। শেষের 𖹭 (U+16E6D) যাচাই করা: UTF-16 d81b de6d ✅
+
+{RETURN_CHARGE} এখন অর্ডারের আসল ডেলিভারি চার্জ (হার্ডকোড ১৩০ নয়)।
+admin-courier.js: workerPayload()-এ ৭টা কী যোগ, আর loadWorkerSettings()
+worker থেকে মান ফিরিয়ে প্যানেলে বসায় (খালি এলে লোকাল পছন্দ মুছে না)।
+
+----------------------------------------------------------------
+  PATCH C — webhook auth (আসল বাগ)
+----------------------------------------------------------------
+প্রত্যাহার: "webhook 202 দেয় না / secret echo করে না" — দাবি ভুল ছিল।
+লাইন 1213-এ আগেই status: 202 + integration-secret echo আছে।
+
+আসল বাগ: ভেরিফিকেশন হতো X-Pathao-Signature দিয়ে, যেটা পাঠাও কখনো
+পাঠায় না। pathao_webhook_secret সেট করলে হ্যান্ডশেক ঠিকই হতো (ওটা
+আগেই return করে) কিন্তু প্রতিটা অর্ডার-ইভেন্ট 401 খেত।
+এখন: X-Pathao-Merchant-Webhook-Integration-Secret প্রধান, পুরনোটা ফলব্যাক।
+
+----------------------------------------------------------------
+  টেস্ট — আসল কোড চালিয়ে (test-worker-autobook.mjs)
+----------------------------------------------------------------
+worker.js থেকে সরাসরি autoBookPathao তুলে স্টাব দিয়ে চালানো হয়েছে।
+ফলাফল: ৩৩/৩৩ পাস।
+
+  amount_to_collect  প্রি-পেইড 0 ✅ | COD 1200 ✅ | অ্যাডভান্স 700 ✅
+                     দশমিক 689.1→689 ✅ | amountSource=total_payable→1200 ✅
+  city               Dhaka 1, Rajshahi 6, Barisal 17, Feni 51, Comilla 5,
+                     Cox's Bazar 11, Brahmanbaria 32 — সব ✅
+                     অজানা জেলা (Bhola) → বুকিং বন্ধ, API কল 0 ✅
+  zone               Gulshan→77 ✅ | থানা না মিললে ঠিকানা থেকে 940 ✅
+                     কোনোটাই না মিললে ফিল্ডটাই বাদ ✅
+  instruction        {NAME}/{ORDER_ID}/{RETURN_CHARGE} বসে ✅ | শেষে 𖹭 ✅
+                     কাস্টম টেমপ্লেট ✅
+  item description   SKU+qty+দাম ✅ | টগল বন্ধ করলে বাদ ✅ | fallback ✅
+  গেট/DB             enabled=0 → skip ✅ | store_id নেই → skip ✅
+                     courier_shipments-এ draft ✅ | history নোট ✅
+                     পিকআপ রিকোয়েস্ট কল হয়নি ✅
+                     recipient_secondary_phone পাঠানো হয়নি ✅
+
+  টেস্ট-হার্নেসে নিজের ৩টে ভুল ধরা পড়ে ও ঠিক করা হয়েছে (কোডের ভুল নয়):
+  স্টাবে .bind() ছাড়া .first() চলত না; order() হেল্পারে address
+  ওভাররাইড ইগনোর হতো; bind ক্রম ভুল ধরা হয়েছিল।
+
+----------------------------------------------------------------
+  বাকি রইল (ঝুঁকির কারণে, আপনার সিদ্ধান্ত দরকার)
+----------------------------------------------------------------
+  E  local/call/online চ্যানেল — commerce_orders-এ
+     CHECK (channel IN ('website','whatsapp')) আছে (লাইন 109)।
+     SQLite-এ CHECK বদলাতে টেবিল রিবিল্ড লাগে → ডেটা ঝুঁকি।
+     দ্রষ্টব্য: লাইন 683-এ channel 'whatsapp'-এ coerce হয়, অথচ
+     690/691/693-এ rawChannel==='local' চেক আছে — অসামঞ্জস্য আসল।
+  G  নতুন picked/manual স্ট্যাটাস — schema + frontend দুটোতেই লাগে।
+  F  প্রত্যাহার — KR_SERVER_COUPONS সেফটি নেট, সরানো যাবে না।

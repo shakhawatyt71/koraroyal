@@ -127,6 +127,20 @@
       W.autoBook.checked      = s.pathao_auto_book === '1';
       W.webhookSecret.value   = s.pathao_webhook_secret || '';
       $('cModeLabel').textContent = (s.pathao_mode === 'live') ? 'LIVE' : 'SANDBOX';
+      /* worker-এর মান প্যানেলে ফিরিয়ে আনা — যাতে দুই জায়গা একই থাকে।
+         খালি মান এলে (migration এখনো চলেনি) লোকাল পছন্দ মুছে ফেলা হয় না। */
+      const merged = {};
+      if (s.pathao_default_quantity)     merged.quantity     = Number(s.pathao_default_quantity) || 1;
+      if (s.pathao_amount_source)        merged.amountSource = s.pathao_amount_source;
+      if (s.pathao_instruction_template) merged.instrApi     = s.pathao_instruction_template;
+      if (s.pathao_item_desc_sku)        merged.descSku      = s.pathao_item_desc_sku === '1';
+      if (s.pathao_item_desc_price)      merged.descPrice    = s.pathao_item_desc_price === '1';
+      if (s.pathao_item_desc_qty)        merged.descQty      = s.pathao_item_desc_qty === '1';
+      if (s.pathao_item_desc_fallback)   merged.descFallback = s.pathao_item_desc_fallback;
+      if (Object.keys(merged).length) {
+        krSaveCourierPrefs(Object.assign(krCourierPrefs(), merged));
+        readPrefsIntoForm();
+      }
       await loadStores(s.pathao_store_id || '');
       refreshPreviews();
     } catch (e) {
@@ -135,7 +149,17 @@
   }
 
   function workerPayload() {
+    /* প্যানেলের কন্ট্রোলগুলো এখন worker-এও যায় — না পাঠালে auto-booking
+       অ্যাডমিনের পছন্দ দেখতেই পায় না (আগে শুধু localStorage-এ থাকত)। */
+    const p = krCourierPrefs();
     return {
+      pathaoDefaultQuantity:     p.quantity,
+      pathaoAmountSource:        p.amountSource,
+      pathaoInstructionTemplate: p.instrApi,
+      pathaoItemDescSku:         p.descSku,
+      pathaoItemDescPrice:       p.descPrice,
+      pathaoItemDescQty:         p.descQty,
+      pathaoItemDescFallback:    p.descFallback,
       pathaoEnabled:            W.enabled.checked,
       pathaoAutoBook:           W.autoBook.checked,
       pathaoMode:               W.sandbox.checked ? 'sandbox' : 'live',
