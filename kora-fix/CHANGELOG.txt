@@ -172,3 +172,62 @@ webhook (ধাপ ৪)-এর জন্য worker-এর `pathao/webhook` ফ�
 [ ] প্রি-পেইড অর্ডারে Amount = 0
 [ ] Instruction-এ আপনার অঞ্চলের চার্জ (ঢাকায় ৬০) + শেষে 𖹭
 [ ] CSV নামছে, গাল্মিল নেই, AmountToCollect পূর্ণসংখ্যা
+
+
+════════════════════════════════════════════════════════════════════
+যোগ হয়েছে: worker.js PATCH (ধাপ ২)
+════════════════════════════════════════════════════════════════════
+নতুন ফাইল:
+  worker-pathao-fix.js   ← PATCH A + B, কপি-পেস্ট রেডি, node --check পাস
+  worker-patches.md      ← বাকি patch-এর নির্দেশ (C থেকে G)
+
+⚠ worker.js ২৮০KB — সম্পূর্ণ ফাইল দেওয়া সম্ভব না, তাই patch আকারে।
+  Cloudflare → Worker → Quick Edit → Ctrl+F করে অ্যাঙ্কর খুঁজে বসান।
+
+🔴 PATCH A — autoBookPathao() সম্পূর্ণ রিপ্লেসমেন্ট (সবচেয়ে বড় বাগ)
+   ১. প্রি-পেইড ডাবল কালেকশন (codRemaining || totalPayable)
+   ২. হার্ডকোড cityId ম্যাপ — ভুল ID:
+        rajshahi→5  কিন্তু পাঠাওর 5 = Cumilla
+        barisal→7   কিন্তু Barisal = 17
+        ম্যাপে না থাকা ৫৪ জেলা → চুপচাপ ঢাকা (1)
+   ৩. জোন = লিস্টের প্রথমটা (ঢাকার প্রথমটা ' Dhamrai , Savar')
+   ৪. recipient_area: null পাঠানো হতো (পাঠাও বলে "do not send null")
+   ৫. item_description হার্ডকোড 'Clothing'
+
+🟠 PATCH B — নতুন হেল্পার: KR_CITY_ALIASES, krFindPathaoCity,
+   krFindPathaoPlace, krGetPathaoCities (২৪ ঘণ্টা KV ক্যাশ)
+
+নতুন আচরণ: জেলা পাঠাওর লিস্টে না মিললে **চুপচাপ ঢাকা বানাবে না** —
+বুকিং বন্ধ রেখে অর্ডার history-তে নোট লিখবে, অ্যাডমিন নিজে বাছবেন।
+
+বাকি patch (worker-patches.md-এ বিস্তারিত):
+  C  Webhook: HTTP 202 + X-Pathao-Merchant-Webhook-Integration-Secret
+     + ২২টা Pathao ইভেন্ট → আপনার ৮টা স্ট্যাটাসের ম্যাপিং টেবিল
+  D  operations-settings-এ ১০টা নতুন কুরিয়ার কী
+  E  Manual order-এ local/call/online চ্যানেল (এখন সব 'whatsapp' হয়ে যায়)
+  F  Legacy KR_SERVER_COUPONS={KORA10:10,APNALOK20:20} সরানো
+  G  নতুন picked/manual স্ট্যাটাস
+
+C–G কেন কোড হিসেবে দিইনি: worker.txt-এর ওই অংশগুলো আমি পড়তে পারিনি
+(webhook হ্যান্ডলার, operations-settings হোয়াইটলিস্ট, DB CHECK কনস্ট্রেইন্ট)।
+অনুমান করে কোড দিলে আপনার ডেটা বা কুপন ভাঙার ঝুঁকি ছিল — তাই
+নির্দেশ দিয়েছি, কোড দিইনি।
+
+
+════════════════════════════════════════════════════════════════════
+worker patch-এর যাচাই (আমি যা চালিয়েছি)
+════════════════════════════════════════════════════════════════════
+✅ node --check          worker-pathao-fix.js পাস
+✅ city ম্যাচিং ১৪টা     Rajshahi→6, Barisal→17, Noakhali→50, Feni→51,
+                         Brahmanbaria→32, Barishal→17, Comilla→5,
+                         Chittagong→2, Barguna→34, Bandarban→62,
+                         Cox's Bazar→11, Gazipur→9, Narayanganj→10, Dhaka→1
+✅ অম্যাপড জেলা          Bhola → null (ঢাকা নয়, নোটিফিকেশন যাবে)
+✅ zone ম্যাচিং           "Gulshan" ঠিকানা → Gulshan (পুরনো: Dhamrai , Savar)
+                         "Uttara Sector 9" → Uttara Sector 9
+                         অচেনা ঠিকানা → null (ভুল জোন বসবে না)
+
+⚠ টেস্টে ২বার ফেল দেখিয়েছিল, দুটোই আমার টেস্ট ফিক্সচারের ভুল ছিল:
+   • প্রথমে Rajshahi ফিক্সচারে ছিল না → যোগ করলাম
+   • তারপর expectation ভুল ছিল (null ধরেছিলাম, 6 হবে) → ঠিক করলাম
+   কোডের ভুল ছিল না।
