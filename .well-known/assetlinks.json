@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+          "namespace": "android_app",
+          "package_name": "com.koraroyal.app",
+          "sha256_cert_fingerprints": ["76:FC:1F:FB:D3:2D:A9:21:36:0C:37:AB:01:29:98:A7:A3:53:77:50:98:4D:D9:5C:7F:22:7E:86:3E:8B:43:26"]
+    }
+}]
