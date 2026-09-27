@@ -3153,7 +3153,7 @@ width="18"
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'activated') {
                 console.log('[PWA] New Service Worker activated');
-                showUpdateNotification();
+                // showUpdateNotification(); /* KORA-PAUSED: আপডেট-ব্যানার বন্ধ করা আছে। আবার চালু করতে এই লাইনের সামনের // মুছে দিন */
               }
             });
           });
