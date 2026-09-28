@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Releases — KORA ROYAL Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <script src="admin-core.js"></script>
+
+  <style>
+    .kr-mobile-menu-btn { width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:transparent; border:none; cursor:pointer; }
+    .kr-apk-note { padding:11px 14px; margin-bottom:14px; border:1px solid rgba(59,130,246,.2); background:rgba(59,130,246,.07); border-radius:12px; font-size:.82rem; color:var(--text-secondary); line-height:1.55; }
+    .kr-apk-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.125rem; align-items:start; }
+    @media (max-width:1080px){ .kr-apk-grid{grid-template-columns:1fr;} }
+    .kr-apk-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.1rem 1.15rem; }
+    .kr-apk-card h2 { font-family:'Outfit',sans-serif; font-size:1rem; font-weight:700; margin:0 0 .85rem; }
+    textarea.kr-input { min-height:88px; resize:vertical; font-family:'DM Sans',sans-serif; }
+    .kr-hint { font-size:.72rem; color:var(--text-muted); margin-top:4px; line-height:1.5; }
+    .kr-apk-file { display:flex; align-items:center; gap:10px; margin-bottom:.875rem; }
+    .kr-apk-file label { flex-shrink:0; }
+    .kr-apk-fname { font-size:.78rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+    .kr-apk-progress { height:8px; border-radius:99px; background:var(--bg-input); overflow:hidden; margin:.65rem 0 .35rem; display:none; }
+    .kr-apk-progress.is-on { display:block; }
+    .kr-apk-progress > div { height:100%; width:0%; background:var(--brand-coral); border-radius:99px; transition:width .25s ease; }
+    .kr-apk-status { font-size:.75rem; color:var(--text-muted); min-height:1.1em; }
+    .kr-apk-linkrow { display:flex; gap:8px; align-items:center; }
+    .kr-apk-linkrow input { flex:1; min-width:0; font-size:.8rem; }
+    .kr-apk-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    .kr-apk-table th { text-align:left; font-family:'Outfit',sans-serif; font-size:.7rem; letter-spacing:.4px; text-transform:uppercase; color:var(--text-muted); padding:8px 10px; border-bottom:1px solid var(--border-subtle); }
+    .kr-apk-table td { padding:10px; border-bottom:1px solid var(--border-subtle); vertical-align:middle; }
+    .kr-apk-badge { display:inline-flex; align-items:center; gap:4px; font-size:.66rem; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(16,185,129,.12); color:#10B981; }
+    .kr-apk-ver { font-weight:700; font-family:'Outfit',sans-serif; }
+    .kr-apk-scroll { overflow-x:auto; }
+  </style>
+</head>
+<body>
+
+<div class="kr-admin-layout">
+  <aside id="krAdminSidebar"></aside>
+  <div class="kr-sidebar-overlay" id="krSidebarOverlay"></div>
+
+  <div class="kr-admin-right">
+    <header class="kr-admin-topbar">
+      <button class="kr-mobile-menu-btn" id="krMobileMenuBtn"></button>
+      <div class="kr-topbar-title">App Releases</div>
+      <button class="kr-btn kr-btn-ghost kr-btn-sm" id="apkRefresh">Refresh</button>
+    </header>
+
+    <main class="kr-admin-main">
+      <div class="kr-apk-note">
+        Upload new app versions here. Every release gets a <b>direct download link</b> (one click — download starts immediately).
+        The <b>Latest link</b> always serves the newest version, so you can share it once and reuse it forever.
+        When you upload a newer version, app users (only app users — never website visitors) see an update popup.
+        This section is admin-only; nothing appears on the website.
+      </div>
+
+      <div class="kr-apk-grid">
+        <section class="kr-apk-card">
+          <h2>Upload New Version</h2>
+          <div class="kr-field">
+            <label class="kr-label">Version</label>
+            <input id="apkVersion" class="kr-input" placeholder="2.0.2" inputmode="decimal">
+            <div class="kr-hint">আমি নতুন APK বানিয়ে দিলে কোন ভার্সন-নাম লিখবেন বলে দেব। নিয়ম: শুধু সংখ্যা ও ডট (যেমন 2.0.2)</div>
+          </div>
+          <div class="kr-field">
+            <label class="kr-label">What's new (changelog)</label>
+            <textarea id="apkChangelog" class="kr-input" placeholder="কী নতুন — অ্যাপের আপডেট-পপআপে ইউজার এটাই দেখবে"></textarea>
+          </div>
+          <div class="kr-field">
+            <label class="kr-label">APK file</label>
+            <div class="kr-apk-file">
+              <label class="kr-btn kr-btn-ghost kr-btn-sm" for="apkFile" style="cursor:pointer;">Choose .apk</label>
+              <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" style="display:none;">
+              <span class="kr-apk-fname" id="apkFileName">No file selected</span>
+            </div>
+            <div class="kr-hint">সীমা: 9.5 MB পর্যন্ত (Cloudinary ফ্রি প্ল্যান)। বর্তমান অ্যাপ ≈ 5 MB।</div>
+          </div>
+          <button class="kr-btn kr-btn-primary" id="apkUploadBtn">Upload Release</button>
+          <div class="kr-apk-progress" id="apkProgress"><div id="apkProgressBar"></div></div>
+          <div class="kr-apk-status" id="apkStatus"></div>
+        </section>
+
+        <section class="kr-apk-card">
+          <h2>Share Links</h2>
+          <div class="kr-field">
+            <label class="kr-label">Always-latest link (একবার শেয়ার করে রাখুন — সবসময় নতুন ভার্সন দেবে)</label>
+            <div class="kr-apk-linkrow">
+              <input id="apkLatestLink" class="kr-input" readonly>
+              <button class="kr-btn kr-btn-ghost kr-btn-sm" id="apkCopyLatest">Copy</button>
+            </div>
+          </div>
+          <div class="kr-field">
+            <label class="kr-label">Current latest version</label>
+            <div id="apkLatestInfo" class="kr-hint" style="font-size:.8rem;">Loading…</div>
+          </div>
+        </section>
+      </div>
+
+      <section class="kr-apk-card" style="margin-top:1.125rem;">
+        <h2>All Releases</h2>
+        <div class="kr-apk-scroll">
+          <table class="kr-apk-table">
+            <thead>
+              <tr><th>Version</th><th>Released</th><th>Size</th><th>Downloads</th><th>Link</th><th></th></tr>
+            </thead>
+            <tbody id="apkList"><tr><td colspan="6" style="color:var(--text-muted);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+'use strict';
+(function () {
+  if (!krAdminCheckSession()) return;
+  krAdminRenderNav('appreleases');
+  krAdminInitMobileNav();
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var mobile = $('krMobileMenuBtn'); if (mobile) mobile.innerHTML = _SVG.menu;
+
+  var releases = [];
+
+  function fmtSize(b) { var mb = Number(b) / 1048576; return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(b) / 1024) + ' KB'; }
+  function fmtDate(ts) { if (!ts) return '—'; try { return new Date(ts).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); } catch (e) { return '—'; } }
+  function setStatus(msg, bad) { $('apkStatus').textContent = msg || ''; $('apkStatus').style.color = bad ? '#EF4444' : 'var(--text-muted)'; }
+
+  async function load() {
+    try {
+      var r = await krAdminFetch('/api/admin/app-releases');
+      if (!r.ok) throw new Error(r.error || 'Load failed');
+      releases = r.releases || [];
+      var origin = KR_ADMIN.WORKER;
+      $('apkLatestLink').value = origin + '/app/latest';
+      var l = releases[0];
+      $('apkLatestInfo').innerHTML = l
+        ? 'v' + esc(l.version) + ' — ' + fmtSize(l.size) + ' — ' + fmtDate(l.createdAt) + ' — ' + l.downloads + ' downloads'
+        : 'এখনো কোনো ভার্সন আপলোড হয়নি';
+      render();
+    } catch (e) {
+      $('apkList').innerHTML = '<tr><td colspan="6" style="color:#EF4444;">' + esc(e.message) + '</td></tr>';
+      krToast(e.message, 'error');
+    }
+  }
+
+  function render() {
+    $('apkList').innerHTML = releases.length ? releases.map(function (r, i) {
+      return '<tr>' +
+        '<td><span class="kr-apk-ver">v' + esc(r.version) + '</span>' + (i === 0 ? ' <span class="kr-apk-badge">LATEST</span>' : '') +
+          (r.changelog ? '<div style="font-size:.7rem;color:var(--text-muted);max-width:230px;white-space:pre-line;">' + esc(r.changelog) + '</div>' : '') + '</td>' +
+        '<td>' + fmtDate(r.createdAt) + '</td>' +
+        '<td>' + fmtSize(r.size) + '</td>' +
+        '<td>' + r.downloads + '</td>' +
+        '<td><button class="kr-btn kr-btn-ghost kr-btn-sm" data-copy="' + esc(r.url) + '">Copy link</button></td>' +
+        '<td><button class="kr-btn kr-btn-danger kr-btn-sm" data-del="' + esc(r.id) + '">Delete</button></td>' +
+        '</tr>';
+    }).join('') : '<tr><td colspan="6" style="color:var(--text-muted);">No releases yet. Upload your first APK.</td></tr>';
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { krToast('Link copied', 'success'); }, function () { legacyCopy(text); });
+    }
+    legacyCopy(text);
+  }
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); krToast('Link copied', 'success'); } catch (e) { krToast('Copy failed — লিংকটা হাতে সিলেক্ট করুন', 'error'); }
+    ta.remove();
+  }
+
+  function upload() {
+    var version = $('apkVersion').value.trim().replace(/^v/i, '');
+    var file = $('apkFile').files && $('apkFile').files[0];
+    if (!/^\d{1,3}(\.\d{1,3}){0,3}$/.test(version)) { setStatus('ভার্সন ঠিক নয় — যেমন 2.0.2', true); return; }
+    if (!file) { setStatus('APK ফাইল বাছাই করুন', true); return; }
+    if (file.size > 9.5 * 1048576) { setStatus('ফাইল 9.5 MB-এর বেশি — আপলোড হবে না', true); return; }
+    if (file.size < 200000) { setStatus('ফাইলটা APK বলে মনে হচ্ছে না (খুব ছোট)', true); return; }
+
+    var btn = $('apkUploadBtn');
+    btn.disabled = true;
+    $('apkProgress').classList.add('is-on');
+    $('apkProgressBar').style.width = '0%';
+    setStatus('ফাইল পড়া হচ্ছে…');
+
+    var reader = new FileReader();
+    reader.onerror = function () { done('ফাইল পড়া যায়নি', true); };
+    reader.onload = function () {
+      setStatus('আপলোড হচ্ছে…');
+      var token = krAdminGetToken();
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', KR_ADMIN.WORKER + '/api/admin/app-release');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+      xhr.upload.onprogress = function (ev) {
+        if (ev.lengthComputable) $('apkProgressBar').style.width = Math.round(ev.loaded / ev.total * 100) + '%';
+      };
+      xhr.onerror = function () { done('নেটওয়ার্ক সমস্যা — আবার চেষ্টা করুন', true); };
+      xhr.onload = function () {
+        var j = null; try { j = JSON.parse(xhr.responseText); } catch (e) {}
+        if (xhr.status === 200 && j && j.ok) {
+          $('apkProgressBar').style.width = '100%';
+          done('v' + version + ' আপলোড সম্পন্ন — এখন থেকে অ্যাপ-ইউজাররা পপআপ পাবে', false);
+          $('apkVersion').value = ''; $('apkChangelog').value = ''; $('apkFile').value = '';
+          $('apkFileName').textContent = 'No file selected';
+          load();
+        } else {
+          done((j && j.error) || ('আপলোড ব্যর্থ (' + xhr.status + ')'), true);
+        }
+      };
+      xhr.send(JSON.stringify({
+        version: version,
+        changelog: $('apkChangelog').value,
+        dataUri: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
+
+    function done(msg, bad) {
+      btn.disabled = false;
+      setStatus(msg, bad);
+      if (bad) { $('apkProgress').classList.remove('is-on'); $('apkProgressBar').style.width = '0%'; }
+      else setTimeout(function () { $('apkProgress').classList.remove('is-on'); }, 1500);
+      if (bad) krToast(msg, 'error'); else krToast(msg, 'success');
+    }
+  }
+
+  async function remove(id) {
+    if (!confirm('এই ভার্সনটা স্থায়ীভাবে ডিলিট হবে (ফাইল + লিংক)। ইউজাররা আর এই লিংকে ডাউনলোড পাবে না।\n\nডিলিট করবেন?')) return;
+    try {
+      var r = await krAdminFetch('/api/admin/app-release/delete', { method: 'POST', body: JSON.stringify({ id: id }) });
+      if (!r.ok) throw new Error(r.error || 'Delete failed');
+      krToast('Release deleted', 'success');
+      load();
+    } catch (e) { krToast(e.message, 'error'); }
+  }
+
+  $('apkFile').onchange = function () {
+    var f = $('apkFile').files && $('apkFile').files[0];
+    $('apkFileName').textContent = f ? (f.name + ' (' + fmtSize(f.size) + ')') : 'No file selected';
+  };
+  $('apkUploadBtn').onclick = upload;
+  $('apkRefresh').onclick = load;
+  $('apkCopyLatest').onclick = function () { copyText($('apkLatestLink').value); };
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.copy) copyText(b.dataset.copy);
+    if (b.dataset.del) remove(b.dataset.del);
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
