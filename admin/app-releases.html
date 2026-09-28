@@ -77,7 +77,12 @@
               <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" style="display:none;">
               <span class="kr-apk-fname" id="apkFileName">No file selected</span>
             </div>
-            <div class="kr-hint">সীমা: 9.5 MB পর্যন্ত (Cloudinary ফ্রি প্ল্যান)। বর্তমান অ্যাপ ≈ 5 MB।</div>
+            <div class="kr-hint">ফাইল-আপলোড সীমা: 9.5 MB (Cloudinary ফ্রি)। বর্তমান অ্যাপ ≈ 5 MB।</div>
+          </div>
+          <div class="kr-field">
+            <label class="kr-label">অথবা সরাসরি ডাউনলোড-লিংক (বড় APK-র জন্য)</label>
+            <input id="apkDirectUrl" class="kr-input" type="url" placeholder="https://github.com/.../koraroyal_2.0.2.apk">
+            <div class="kr-hint">9.5 MB-এর বড় APK হলে: ফাইলটা <b>GitHub Releases</b>-এ আপলোড করুন (ফ্রি, প্রতি ফাইল ২ GB পর্যন্ত) → ওই লিংকটা এখানে বসান। এই ঘর ভরা থাকলে উপরের ফাইল আর লাগবে না; latest-লিংক, পপআপ, ডাউনলোড-কাউন্ট সব হুবহু একইভাবে চলবে।</div>
           </div>
           <button class="kr-btn kr-btn-primary" id="apkUploadBtn">Upload Release</button>
           <div class="kr-apk-progress" id="apkProgress"><div id="apkProgressBar"></div></div>
@@ -127,7 +132,7 @@
 
   var releases = [];
 
-  function fmtSize(b) { var mb = Number(b) / 1048576; return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(b) / 1024) + ' KB'; }
+  function fmtSize(b) { if (!Number(b)) return '—'; var mb = Number(b) / 1048576; return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(b) / 1024) + ' KB'; }
   function fmtDate(ts) { if (!ts) return '—'; try { return new Date(ts).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); } catch (e) { return '—'; } }
   function setStatus(msg, bad) { $('apkStatus').textContent = msg || ''; $('apkStatus').style.color = bad ? '#EF4444' : 'var(--text-muted)'; }
 
@@ -181,7 +186,27 @@
     var version = $('apkVersion').value.trim().replace(/^v/i, '');
     var file = $('apkFile').files && $('apkFile').files[0];
     if (!/^\d{1,3}(\.\d{1,3}){0,3}$/.test(version)) { setStatus('ভার্সন ঠিক নয় — যেমন 2.0.2', true); return; }
-    if (!file) { setStatus('APK ফাইল বাছাই করুন', true); return; }
+
+    /* সরাসরি-লিংক মোড: ফাইল ছাড়াই, শুধু লিংক দিয়ে রিলিজ */
+    var direct = $('apkDirectUrl').value.trim();
+    if (direct) {
+      if (!/^https:\/\//i.test(direct)) { setStatus('লিংকটা https:// দিয়ে শুরু হতে হবে', true); return; }
+      var btnD = $('apkUploadBtn');
+      btnD.disabled = true;
+      setStatus('যোগ করা হচ্ছে…');
+      krAdminFetch('/api/admin/app-release', { method: 'POST', body: JSON.stringify({ version: version, changelog: $('apkChangelog').value, directUrl: direct }) })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.error || 'ব্যর্থ');
+          krToast('v' + version + ' যোগ হয়েছে (সরাসরি লিংক)', 'success');
+          $('apkVersion').value = ''; $('apkChangelog').value = ''; $('apkDirectUrl').value = '';
+          load();
+        })
+        .catch(function (e) { setStatus(e.message, true); krToast(e.message, 'error'); })
+        .finally(function () { btnD.disabled = false; setStatus(''); });
+      return;
+    }
+
+    if (!file) { setStatus('APK ফাইল বাছাই করুন (অথবা সরাসরি-লিংক ঘরে লিংক দিন)', true); return; }
     if (file.size > 9.5 * 1048576) { setStatus('ফাইল 9.5 MB-এর বেশি — আপলোড হবে না', true); return; }
     if (file.size < 200000) { setStatus('ফাইলটা APK বলে মনে হচ্ছে না (খুব ছোট)', true); return; }
 
@@ -209,7 +234,7 @@
         if (xhr.status === 200 && j && j.ok) {
           $('apkProgressBar').style.width = '100%';
           done('v' + version + ' আপলোড সম্পন্ন — এখন থেকে অ্যাপ-ইউজাররা পপআপ পাবে', false);
-          $('apkVersion').value = ''; $('apkChangelog').value = ''; $('apkFile').value = '';
+          $('apkVersion').value = ''; $('apkChangelog').value = ''; $('apkFile').value = ''; $('apkDirectUrl').value = '';
           $('apkFileName').textContent = 'No file selected';
           load();
         } else {
@@ -259,5 +284,5 @@
   load();
 })();
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42513004c90c718',t:'MTc5MDYyMjg5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
