@@ -57,6 +57,7 @@ const STATIC_ASSETS = [
   '/js/diag.js',
   '/js/notify.js',
   '/js/offline-mode.js',
+  '/js/app-update.js',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
   '/offline.html',
