@@ -1,5 +1,5 @@
 /* ================================================================
-   KORA ROYAL — Service Worker v2.0 (offline-data + push-renew)
+   KORA ROYAL — Service Worker v2.1 (offline-data + push-renew + periodic-sync)
    PWA Offline Support + Caching Strategy
    
    Features:
@@ -430,6 +430,31 @@ async function workerDataSWR(request, url) {
     status: 503,
     headers: { 'Content-Type': 'application/json' }
   });
+}
+
+// ===== PERIODIC BACKGROUND SYNC =====
+//
+// ইনস্টল করা PWA-তে (Chrome/Android) ব্রাউজার নিজেই মাঝে মাঝে ব্যাকগ্রাউন্ডে
+// ক্যাটালগ/রিভিউ এনে ক্যাশে টাটকা করে রাখে — অ্যাপ খুললেই নতুন ডেটা সাথে সাথে।
+// যেসব ব্রাউজারে এই সুবিধা নেই (iOS সহ) সেখানে নীরবে বসে থাকে, কিছু ভাঙে না।
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'kora-catalog-refresh') {
+    event.waitUntil(krPrefetchWorkerData());
+  }
+});
+
+async function krPrefetchWorkerData() {
+  const cache = await caches.open(CACHE_API);
+  const targets = [
+    { req: KR_WORKER_ORIGIN + '/api/catalog', key: KR_WORKER_ORIGIN + '/api/catalog' },
+    { req: KR_WORKER_ORIGIN + '/api/reviews?filter=all', key: KR_WORKER_ORIGIN + '/api/reviews?filter=all' }
+  ];
+  await Promise.all(targets.map(async (t) => {
+    try {
+      const res = await fetch(t.req, { cache: 'no-store' });
+      if (res && res.ok) await cache.put(t.key, res.clone());
+    } catch (e) { /* নেট নেই — পরের বার */ }
+  }));
 }
 
 // ===== BACKGROUND SYNC =====
