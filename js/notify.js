@@ -102,6 +102,11 @@
   }
 
   async function requestPermission() {
+    /* KORA ROYAL standalone app: WebView-এ PushManager নেই — অ্যাপ-ব্রিজ পথ।
+       এই চেক না থাকলে নিচের লাইনেই ফাংশনটি চুপচাপ বন্ধ হয়ে যেত (বাটন "মরা" লাগত)। */
+    if (window.KRApp && typeof window.KRApp.isApp === 'function' && window.KRApp.isApp()) {
+      return appSubscribe();
+    }
     if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return false;
     if (Notification.permission === 'granted') { await subscribe(); return true; }
     if (Notification.permission === 'denied') { showSettingsHelp('browser'); return false; }
@@ -236,6 +241,37 @@
       console.warn('[Notify] subscribe failed:', e);
       return false;
     }
+  }
+
+  /* KORA ROYAL standalone app — অ্যাপের ভেতরে সাবস্ক্রাইব।
+     অ্যাপ নিজে /api/notify/active পোল করে সিস্টেম নোটিফিকেশন দেখায়;
+     এখানে একটা app-local সাবস্ক্রিপশন রেজিস্টার করা হয় যাতে ইন-অ্যাপ
+     বেল-প্যানেল (inbox) আর অ্যাডমিন স্ট্যাটস সব আগের মতোই চলে। */
+  async function appSubscribe() {
+    try {
+      if (window.Notification && Notification.permission !== 'granted') {
+        var r = await Notification.requestPermission();
+        if (r !== 'granted') {
+          if (r === 'denied') showSettingsHelp('os');
+          return false;
+        }
+      }
+      var endpoint = localStorage.getItem(LS.endpoint) || '';
+      if (!endpoint || endpoint.indexOf('app-local:') !== 0) {
+        endpoint = 'app-local:' + ((window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('k' + Date.now() + Math.random().toString(36).slice(2)));
+        localStorage.setItem(LS.endpoint, endpoint);
+      }
+      var contact = readContact();
+      var res = await api('/api/notify/subscribe', {
+        subscription: { endpoint: endpoint, keys: { p256dh: 'app-local', auth: 'app-local' } },
+        userAgent: navigator.userAgent.slice(0, 300),
+        platform: 'app',
+        phone: contact.phone,
+        district: contact.district
+      });
+      if (res && res.ok && res.id) { setSid(res.id); loadInbox(); return true; }
+      return false;
+    } catch (e) { console.warn('[Notify] app subscribe failed:', e); return false; }
   }
 
   function readContact() {
