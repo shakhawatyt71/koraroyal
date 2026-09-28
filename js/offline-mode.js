@@ -309,7 +309,7 @@
 
   /* ---------------- ডিবাগ/তথ্য ---------------- */
   window.KR_OFFLINE = {
-    version: '1.2',
+    version: '1.3',
     isOffline: isOfflineNow,
     catalogSnapshotTime: function () {
       var ts = Number(lsGet(LS_CATALOG + '_ts') || 0);
@@ -335,6 +335,26 @@
           }).catch(() => {});
         }
       }).catch(() => {});
+    }
+  } catch (e) {}
+
+  /* v1.3: web+koraroyal: প্রোটোকল-হ্যান্ডলার + Android শেয়ার-ট্রে রিসিভার */
+  try {
+    var q = new URLSearchParams(window.location.search);
+    var openParam = q.get('open');
+    if (openParam) {
+      var target = String(openParam).replace(/^web\+koraroyal:/i, '');
+      if (target.charAt(0) === '/' && target.indexOf('//') !== 0) {
+        window.history.replaceState({}, '', '/');
+        window.location.replace(target);
+      }
+    } else if (q.get('text') || q.get('url') || q.get('title')) {
+      var shared = String(q.get('title') || '') + ' ' + String(q.get('text') || '') + ' ' + String(q.get('url') || '');
+      shared = shared.trim().slice(0, 100);
+      window.history.replaceState({}, '', '/');
+      if (typeof window.showIsland === 'function') {
+        window.showIsland('info', 'শেয়ার পেয়েছি: ' + (shared || 'কনটেন্ট'), 'Shared content', 5000);
+      }
     }
   } catch (e) {}
 
