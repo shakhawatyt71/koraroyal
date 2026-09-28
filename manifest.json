@@ -121,7 +121,9 @@
   "dir": "ltr",
   "display_override": [
     "standalone",
-    "minimal-ui"
+    "minimal-ui",
+    "window-controls-overlay",
+    "tabbed"
   ],
   "launch_handler": {
     "client_mode": "focus-existing"
@@ -158,5 +160,21 @@
       "form_factor": "wide",
       "label": "KORA ROYAL on desktop"
     }
-  ]
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+koraroyal",
+      "url": "/?open=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
