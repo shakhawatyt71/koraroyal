@@ -23,6 +23,7 @@ const KR_ADMIN = {
     { id:'reviews',  label:'Reviews',   icon:'reviews',     href:'reviews.html'  },
     { id:'reports',  label:'Reports',   icon:'bug',         href:'reports.html'  },
     { id:'notifications', label:'Notifications', icon:'bell', href:'notifications.html' },
+    { id:'appreleases',    label:'App Releases', icon:'apk', href:'app-releases.html' },
   ],
   STATUS_META: {
     pending:               { label:'Pending',         color:'#F59E0B', bg:'rgba(245,158,11,0.12)', icon:'⏳' },
@@ -106,6 +107,7 @@ const _SVG = {
   tag:      `<svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`,
   bug:      `<svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M19 7l-3 2"/><path d="M5 7l3 2"/><path d="M19 19l-3-2"/><path d="M5 19l3-2"/><path d="M20 13h-4"/><path d="M4 13h4"/><path d="M12 20v1"/><path d="M12 3v3"/><path d="M9 4l3 2 3-2"/></svg>`,
   bell:     `<svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  apk:      `<svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><path d="M12 14V7"/><polyline points="9 10 12 7 15 10"/></svg>`,
 };
 window._SVG = _SVG;
 
