@@ -253,6 +253,12 @@
 
   /* ---------------- অফলাইন অবস্থা ---------------- */
   function isOfflineNow() {
+    /* v1.1: অ্যাপের ভেতরে KRApp ব্রিজ সঠিক তথ্য দেয়; ব্রাউজারে navigator.onLine */
+    try {
+      if (window.KRApp && typeof window.KRApp.isOnline === 'function') {
+        return !window.KRApp.isOnline();
+      }
+    } catch (e) {}
     if (typeof navigator.onLine === 'boolean' && !navigator.onLine) return true;
     return false;
   }
@@ -303,7 +309,7 @@
 
   /* ---------------- ডিবাগ/তথ্য ---------------- */
   window.KR_OFFLINE = {
-    version: '1.0',
+    version: '1.2',
     isOffline: isOfflineNow,
     catalogSnapshotTime: function () {
       var ts = Number(lsGet(LS_CATALOG + '_ts') || 0);
@@ -318,4 +324,18 @@
       } catch (e) {}
     }
   };
+  /* v1.2: Periodic Background Sync — ইনস্টল করা PWA হলে ব্রাউজারকে বলি
+     ব্যাকগ্রাউন্ডে ক্যাটালগ টাটকা রাখতে। অনুমতি/সাপোর্ট না থাকলে নীরব। */
+  try {
+    if ('serviceWorker' in navigator && 'PeriodicSyncManager' in window) {
+      navigator.serviceWorker.ready.then((reg) => {
+        if (reg && reg.periodicSync) {
+          reg.periodicSync.register('kora-catalog-refresh', {
+            minInterval: 12 * 60 * 60 * 1000
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+  } catch (e) {}
+
 })();
