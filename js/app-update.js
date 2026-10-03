@@ -1,27 +1,28 @@
 /* ================================================================
-   KORA ROYAL — App Update Checker v1.0
+   KORA ROYAL — App Update + Announcement Popups v1.1
    শুধুমাত্র স্ট্যান্ডঅ্যালোন Android অ্যাপের ভেতরে চলে (KRApp ব্রিজ
-   আছে কিনা দেখে নেয়)। সাধারণ ওয়েবসাইট-ভিজিটর কোনোদিন এই পপআপ
+   আছে কিনা দেখে নেয়)। সাধারণ ওয়েবসাইট-ভিজিটর কোনোদিন কোনো পপআপ
    দেখবে না — স্ক্রিপ্টটি প্রথম লাইনেই নীরবে বন্ধ হয়ে যায়।
 
-   নিয়ম (অ্যাডমিনের সিদ্ধান্ত):
-   - অ্যাপ খোলার সাথে সাথেই চেক করে; পুরনো ভার্সন থাকলে পপআপ দেখায়
-   - প্রতিবার অ্যাপ খুললেই আবার দেখায় (লেটেস্টে আপডেট না করা পর্যন্ত)
-   - ইউজার চাইলে X চেপে পুরনো ভার্সনেই থেকে যেতে পারে
-   - অ্যাপ খোলা থাকলে প্রতি ৬ ঘণ্টায় + ফোরগ্রাউন্ডে ফিরলে আবার চেক
+   দুই ধরনের পপআপ:
+   ১) আপডেট-পপআপ: এডমিন App Releases-এ নতুন ভার্সন দিলে (প্রাধান্য বেশি)
+   ২) ঘোষণা-পপআপ: এডমিন App Popup থেকে যেকোনো কাস্টম বার্তা পাঠালে
+      (চাইলে বাটন+লিংকসহ; এডমিন যখন চায় বন্ধ/ডিলিট করলেই থেমে যায়)
+
+   নিয়ম: অ্যাপ খোলার সাথে সাথেই চেক; পুরনো ভার্সন/সচল ঘোষণা থাকলে
+   পপআপ; প্রতিবার খুললেই আবার; ইউজার X চেপে বন্ধ করতে পারে।
    ================================================================ */
 'use strict';
 (function () {
   if (!window.KRApp || typeof window.KRApp.appVersion !== 'function') return;
 
   var API = 'https://kora-api.shakhawatyt77.workers.dev';
-  var CHECK_INTERVAL = 6 * 60 * 60 * 1000;  /* খোলা থাকলে ৬ ঘণ্টা পরপর */
-  var RESUME_THROTTLE = 30 * 60 * 1000;     /* ফোরগ্রাউন্ডে ফিরলে (অন্তত ৩০ মিনিট ফাঁক) */
-  var START_DELAY = 2500;                   /* পেজ স্বাভাবিকভাবে লোড হতে দিই */
+  var CHECK_INTERVAL = 6 * 60 * 60 * 1000;
+  var RESUME_THROTTLE = 30 * 60 * 1000;
+  var START_DELAY = 2500;
   var lastCheck = 0;
   var popupOpen = false;
 
-  /* "2.0.1" → 2001000 (worker-এর krVersionCodeOf-এর সাথে একই নিয়ম) */
   function myVersionCode() {
     var v = '';
     try { v = window.KRApp.appVersion() || ''; } catch (e) {}
@@ -31,27 +32,8 @@
     return code;
   }
 
-  function check() {
-    lastCheck = Date.now();
-    try {
-      fetch(API + '/api/app/latest', { cache: 'no-store' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) {
-          try {
-            if (!j || !j.ok || !j.latest) return;
-            if (Number(j.latest.versionCode) > myVersionCode()) show(j.latest);
-          } catch (e) {}
-        })
-        .catch(function () {});
-    } catch (e) {}
-  }
-
-  function fmtSize(bytes) {
-    var mb = Number(bytes) / (1024 * 1024);
-    return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(bytes) / 1024) + ' KB';
-  }
-
-  function show(info) {
+  /* ---------- সাধারণ পপআপ-বিল্ডার ---------- */
+  function showPopup(cfg) {
     if (popupOpen) return;
     popupOpen = true;
     try {
@@ -82,22 +64,22 @@
       var overlay = document.createElement('div');
       overlay.className = 'kr-upd-ov';
       overlay.innerHTML =
-        '<div class="kr-upd-card" role="alertdialog" aria-label="App update available">' +
+        '<div class="kr-upd-card" role="alertdialog" aria-label="' + esc(cfg.title) + '">' +
           '<button class="kr-upd-x" aria-label="Close">' +
             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
           '</button>' +
-          '<div class="kr-upd-ico">' +
-            '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><path d="M12 14V7"/><polyline points="9 10 12 7 15 10"/></svg>' +
-          '</div>' +
-          '<h3 class="kr-upd-title">নতুন ভার্সন এসেছে</h3>' +
-          '<p class="kr-upd-ver">ভার্সন ' + esc(info.version) + ' — আপডেট করে নতুন ফিচারগুলো নিন</p>' +
-          (info.changelog ? '<div class="kr-upd-log">' + esc(info.changelog) + '</div>' : '') +
-          (info.size ? '<p class="kr-upd-meta">সাইজ: ' + fmtSize(info.size) + '</p>' : '') +
-          '<button class="kr-upd-btn">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
-            'আপডেট করুন' +
-          '</button>' +
-          '<button class="kr-upd-later">পরে করবো (পুরনো ভার্সনেই থাকবো)</button>' +
+          '<div class="kr-upd-ico">' + (cfg.icon || '') + '</div>' +
+          '<h3 class="kr-upd-title">' + esc(cfg.title) + '</h3>' +
+          (cfg.sub ? '<p class="kr-upd-ver">' + esc(cfg.sub) + '</p>' : '') +
+          (cfg.body ? '<div class="kr-upd-log">' + esc(cfg.body) + '</div>' : '') +
+          (cfg.meta ? '<p class="kr-upd-meta">' + esc(cfg.meta) + '</p>' : '') +
+          (cfg.btnUrl ? (
+            '<button class="kr-upd-btn">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+              esc(cfg.btnLabel || 'খুলুন') +
+            '</button>' +
+            '<button class="kr-upd-later">' + esc(cfg.laterLabel || 'বন্ধ করুন') + '</button>'
+          ) : '<button class="kr-upd-later" style="margin-top:6px">ঠিক আছে</button>') +
         '</div>';
 
       var close = function () {
@@ -105,20 +87,76 @@
         popupOpen = false;
       };
       overlay.querySelector('.kr-upd-x').onclick = close;
-      overlay.querySelector('.kr-upd-later').onclick = close;
-      overlay.querySelector('.kr-upd-btn').onclick = function () {
-        /* workers.dev ঠিকানা — অ্যাপের WebView নিজেই এটা ফোনের
-           ব্রাউজারে পাঠিয়ে দেবে → সেখানেই ডাউনলোড শুরু হবে */
-        try { window.location.href = info.downloadUrl; } catch (e) {}
-        setTimeout(close, 1200);
-      };
+      var later = overlay.querySelector('.kr-upd-later');
+      if (later) later.onclick = close;
+      var btn = overlay.querySelector('.kr-upd-btn');
+      if (btn) {
+        btn.onclick = function () {
+          /* APK-লিংক হলে অ্যাপ সিস্টেম-চুজার দেখাবে (ব্রাউজার নাকি KORA ROYAL);
+             অন্য লিংক হলে ব্রাউজারে খোলে। দুটোই WebView-এর বাইরের URL-নিয়মে চলে। */
+          try { window.location.href = cfg.btnUrl; } catch (e) {}
+          setTimeout(close, 1200);
+        };
+      }
       document.body.appendChild(overlay);
     } catch (e) {
       popupOpen = false;
     }
   }
 
-  /* ট্রিগার: খোলার সাথে + ৬ ঘণ্টা পরপর + ফোরগ্রাউন্ডে ফিরলে */
+  var ICO_APK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><path d="M12 14V7"/><polyline points="9 10 12 7 15 10"/></svg>';
+  var ICO_MEGAPHONE = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-8v18l-18-8v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>';
+
+  function fmtSize(bytes) {
+    var mb = Number(bytes) / (1024 * 1024);
+    return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(bytes) / 1024) + ' KB';
+  }
+
+  /* ---------- চেক: আপডেট (প্রাধান্য ১) + ঘোষণা (প্রাধান্য ২) ---------- */
+  function check() {
+    lastCheck = Date.now();
+    var latest = null;
+    var announcements = [];
+    var pending = 2;
+
+    function done() {
+      if (pending > 0) return;
+      if (latest && Number(latest.versionCode) > myVersionCode()) {
+        showPopup({
+          icon: ICO_APK,
+          title: 'নতুন ভার্সন এসেছে',
+          sub: 'ভার্সন ' + latest.version + ' — আপডেট করে নতুন ফিচারগুলো নিন',
+          body: latest.changelog || '',
+          meta: latest.size ? ('সাইজ: ' + fmtSize(latest.size)) : '',
+          btnUrl: latest.downloadUrl,
+          btnLabel: 'আপডেট করুন',
+          laterLabel: 'পরে করবো (পুরনো ভার্সনেই থাকবো)'
+        });
+      } else if (announcements.length) {
+        var a = announcements[0];
+        showPopup({
+          icon: ICO_MEGAPHONE,
+          title: a.title,
+          body: a.body || '',
+          btnUrl: a.btnUrl || '',
+          btnLabel: a.btnLabel || '',
+          meta: ''
+        });
+      }
+    }
+
+    try {
+      fetch(API + '/api/app/latest', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { try { latest = (j && j.ok && j.latest) || null; } catch (e) {} pending--; done(); })
+        .catch(function () { pending--; done(); });
+      fetch(API + '/api/app/announcements', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { try { announcements = (j && j.ok && j.items) || []; } catch (e) {} pending--; done(); })
+        .catch(function () { pending--; done(); });
+    } catch (e) {}
+  }
+
   var start = function () { setTimeout(check, START_DELAY); };
   if (document.readyState === 'complete' || document.readyState === 'interactive') start();
   else window.addEventListener('DOMContentLoaded', start);
