@@ -106,6 +106,27 @@
       </div>
 
       <section class="kr-apk-card" style="margin-top:1.125rem;">
+        <h2>App Popup — অ্যাপ-ইউজারদের কাস্টম পপআপ</h2>
+        <div class="kr-apk-note" style="margin-bottom:.875rem;">এখানে তৈরি করা পপআপ <b>শুধু অ্যাপ-ইউজাররা</b> দেখবে (ওয়েবসাইট-ভিজিটররা কখনোই নয়)। অ্যাপ খোলার সাথে সাথেই দেখায়; ইউজার বন্ধ করলে পরেরবার অ্যাপ খুললে আবার আসে। <b>Paused</b> করলেই সবার কাছ থেকে সরে যায়। (নতুন অ্যাপ-ভার্সনের আপডেট-পপআপ চললে সেটাই আগে দেখায়, ঘোষণা পরে।)</div>
+        <div class="kr-field-row">
+          <div class="kr-field"><label class="kr-label">Popup title</label><input id="annTitle" class="kr-input" placeholder="যেমন: ঈদ অফার চলছে!"></div>
+          <div class="kr-field"><label class="kr-label">Button label (ঐচ্ছিক)</label><input id="annBtnLabel" class="kr-input" placeholder="যেমন: অফার দেখুন"></div>
+        </div>
+        <div class="kr-field"><label class="kr-label">Popup text</label><textarea id="annBody" class="kr-input" placeholder="পপআপের মূল লেখা"></textarea></div>
+        <div class="kr-field-row">
+          <div class="kr-field"><label class="kr-label">Button link (ঐচ্ছিক — বাটনে চাপলে খুলবে)</label><input id="annBtnUrl" class="kr-input" type="url" placeholder="https://koraroyal.netlify.app/#kr-products"></div>
+          <div class="kr-field"><label class="kr-label">Status</label><select id="annActive" class="kr-input"><option value="1">Active (দেখাবে)</option><option value="0">Paused (লুকানো)</option></select></div>
+        </div>
+        <button class="kr-btn kr-btn-primary" id="annPublishBtn">Publish Popup</button>
+        <div class="kr-apk-scroll" style="margin-top:1rem;">
+          <table class="kr-apk-table">
+            <thead><tr><th>Title</th><th>Status</th><th>Created</th><th></th></tr></thead>
+            <tbody id="annList"><tr><td colspan="4" style="color:var(--text-muted);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="kr-apk-card" style="margin-top:1.125rem;">
         <h2>All Releases</h2>
         <div class="kr-apk-scroll">
           <table class="kr-apk-table">
@@ -131,10 +152,75 @@
   var mobile = $('krMobileMenuBtn'); if (mobile) mobile.innerHTML = _SVG.menu;
 
   var releases = [];
+  var anns = [];
 
   function fmtSize(b) { if (!Number(b)) return '—'; var mb = Number(b) / 1048576; return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(Number(b) / 1024) + ' KB'; }
   function fmtDate(ts) { if (!ts) return '—'; try { return new Date(ts).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); } catch (e) { return '—'; } }
   function setStatus(msg, bad) { $('apkStatus').textContent = msg || ''; $('apkStatus').style.color = bad ? '#EF4444' : 'var(--text-muted)'; }
+
+  async function loadAnns() {
+    try {
+      var r = await krAdminFetch('/api/admin/app-announcements');
+      if (!r.ok) throw new Error(r.error || 'Load failed');
+      anns = r.announcements || [];
+      renderAnns();
+    } catch (e) {
+      $('annList').innerHTML = '<tr><td colspan="4" style="color:#EF4444;">' + esc(e.message) + '</td></tr>';
+    }
+  }
+
+  function renderAnns() {
+    $('annList').innerHTML = anns.length ? anns.map(function (a) {
+      return '<tr>' +
+        '<td><span class="kr-apk-ver">' + esc(a.title) + '</span>' +
+          (a.body ? '<div style="font-size:.7rem;color:var(--text-muted);max-width:230px;white-space:pre-line;">' + esc(a.body) + '</div>' : '') +
+          (a.btnUrl ? '<div style="font-size:.66rem;color:var(--text-muted);">বাটন: ' + esc(a.btnLabel || 'খুলুন') + ' → ' + esc(a.btnUrl) + '</div>' : '') + '</td>' +
+        '<td>' + (a.isActive ? '<span class="kr-apk-badge">ACTIVE</span>' : '<span class="kr-apk-badge" style="background:rgba(127,127,127,.15);color:var(--text-muted);">PAUSED</span>') + '</td>' +
+        '<td>' + fmtDate(a.createdAt) + '</td>' +
+        '<td><button class="kr-btn kr-btn-ghost kr-btn-sm" data-ann-toggle="' + esc(a.id) + '" data-ann-active="' + (a.isActive ? 0 : 1) + '">' + (a.isActive ? 'Pause' : 'Resume') + '</button> ' +
+            '<button class="kr-btn kr-btn-danger kr-btn-sm" data-ann-del="' + esc(a.id) + '">Delete</button></td>' +
+        '</tr>';
+    }).join('') : '<tr><td colspan="4" style="color:var(--text-muted);">কোনো পপআপ নেই। উপরের ফর্ম থেকে প্রথমটা বানান।</td></tr>';
+  }
+
+  async function publishAnn() {
+    var title = $('annTitle').value.trim();
+    if (!title) { krToast('Popup title দিন', 'error'); return; }
+    var btn = $('annPublishBtn');
+    btn.disabled = true;
+    try {
+      var r = await krAdminFetch('/api/admin/app-announcement', { method: 'POST', body: JSON.stringify({
+        title: title,
+        body: $('annBody').value,
+        btnLabel: $('annBtnLabel').value.trim(),
+        btnUrl: $('annBtnUrl').value.trim(),
+        isActive: $('annActive').value === '1'
+      }) });
+      if (!r.ok) throw new Error(r.error || 'Failed');
+      krToast('Popup প্রকাশিত হয়েছে', 'success');
+      $('annTitle').value = ''; $('annBody').value = ''; $('annBtnLabel').value = ''; $('annBtnUrl').value = '';
+      loadAnns();
+    } catch (e) { krToast(e.message, 'error'); }
+    finally { btn.disabled = false; }
+  }
+
+  async function toggleAnn(id, active) {
+    try {
+      var r = await krAdminFetch('/api/admin/app-announcement/toggle', { method: 'POST', body: JSON.stringify({ id: id, isActive: !!active }) });
+      if (!r.ok) throw new Error(r.error || 'Failed');
+      loadAnns();
+    } catch (e) { krToast(e.message, 'error'); }
+  }
+
+  async function delAnn(id) {
+    if (!confirm('পপআপটা স্থায়ীভাবে ডিলিট হবে?')) return;
+    try {
+      var r = await krAdminFetch('/api/admin/app-announcement/delete', { method: 'POST', body: JSON.stringify({ id: id }) });
+      if (!r.ok) throw new Error(r.error || 'Failed');
+      krToast('Popup deleted', 'success');
+      loadAnns();
+    } catch (e) { krToast(e.message, 'error'); }
+  }
 
   async function load() {
     try {
@@ -281,8 +367,16 @@
     if (b.dataset.del) remove(b.dataset.del);
   });
 
+  $('annPublishBtn').onclick = publishAnn;
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.annToggle) toggleAnn(b.dataset.annToggle, b.dataset.annActive === '1');
+    if (b.dataset.annDel) delAnn(b.dataset.annDel);
+  });
+
   load();
+  loadAnns();
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42513004c90c718',t:'MTc5MDYyMjg5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
